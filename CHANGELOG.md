@@ -5,6 +5,7 @@
 
 ### Changed
 - updated deps
+- updated hooks
 
 ### Fixed
 
