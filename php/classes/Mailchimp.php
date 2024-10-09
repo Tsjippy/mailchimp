@@ -500,6 +500,15 @@ if(!class_exists(__NAMESPACE__.'\Mailchimp')){
 		}
 
 		/**
+		 * Gets a campaign by id
+		 *
+		 * @param	int		$id		The campaign Id.
+		 */
+		public function getCampaign($id){
+			return $this->client->campaigns->get($id);
+		}
+
+		/**
 		 * Gets all Mailchimp campaigns created after a certain date
 		 *
 		 * @param	string	$sendAfter	The string in the format '2023-10-21T15:41:36+00:00'
