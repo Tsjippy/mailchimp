@@ -4,12 +4,17 @@
 ### Added
 
 ### Changed
-- updated deps
-- updated hooks
 
 ### Fixed
 
 ### Updated
+
+## [8.0.1] - 2024-10-07
+
+
+### Changed
+- updated deps
+- updated hooks
 
 ## [8.0.0] - 2024-10-04
 
