@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- show direct url to mailchimp campaign when editing a mailchimp post
 
 ### Changed
 
