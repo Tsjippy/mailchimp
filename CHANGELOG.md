@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- show direct url to mailchimp campaign when editing a mailchimp post
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [8.0.2] - 2024-10-09
+
+
+### Added
+- show direct url to mailchimp campaign when editing a mailchimp post
 
 ## [8.0.1] - 2024-10-07
 
