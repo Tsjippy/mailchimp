@@ -6,7 +6,7 @@ use SIM;
 add_action( 'enqueue_block_editor_assets', function() {
     wp_enqueue_script(
         'sim-mailchimp-block',
-        plugins_url('blocks/mailchimp_options/build/index.js', __DIR__),
+        SIM\pathToUrl(MODULE_PATH.'blocks/mailchimp_options/build/index.js'),
         [ 'wp-blocks', 'wp-dom', 'wp-dom-ready', 'wp-edit-post' ],
         MODULE_VERSION
     );
