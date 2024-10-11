@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- redering of asset urls
 
 ### Fixed
 
 ### Updated
+
+## [8.0.3] - 2024-10-11
+
+
+### Changed
+- redering of asset urls
 
 ## [8.0.2] - 2024-10-09
 
