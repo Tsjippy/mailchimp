@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- link processing & autoconvert links to video
 
 ### Changed
 
