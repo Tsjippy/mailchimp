@@ -5,11 +5,11 @@ use WP_Error;
 
 //https://mailchimp.com/developer/marketing
 
+require_once( MODULE_PATH  . 'lib/vendor/autoload.php');
+
 if(class_exists(__NAMESPACE__.'\Mailchimp')){
 	return;
 }
-
-require_once( MODULE_PATH  . 'lib/vendor/autoload.php');
 
 class Mailchimp{
 	public $userId;
