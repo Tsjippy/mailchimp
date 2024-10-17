@@ -2,11 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- link processing & autoconvert links to video
 
 ### Changed
 
 ### Fixed
+
+### Updated
+
+## [8.0.4] - 2024-10-17
+
+
+### Added
+- link processing & autoconvert links to video
 
 ### Updated
 - readme
