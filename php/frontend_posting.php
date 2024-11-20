@@ -2,7 +2,8 @@
 namespace SIM\MAILCHIMP;
 use SIM;
 
-add_action('sim_frontend_post_before_content', function($object){
+add_action('sim_frontend_post_before_content', __NAMESPACE__.'\beforeContent');
+function beforeContent($object){
     // check for mailchim audience id shortcode
     if(!preg_match('/\[mailchimp id=\'(.*?)\'\]/',$object->postContent, $matches)){
         return;
@@ -15,10 +16,11 @@ add_action('sim_frontend_post_before_content', function($object){
         echo "<h4>Mailchimp campaign url</h4>";
         echo "<a href='$campaign->long_archive_url' target='_blank'>Check the online mailchimp campaign</a>";
     }
-});
+}
 
 // add the mailchimp fields to the content creation form
-add_action('sim_frontend_post_after_content', function($frontendContend){
+add_action('sim_frontend_post_after_content', __NAMESPACE__.'\afterContent');
+function afterContent($frontendContend){
     $mailchimpSegmentIds    = $frontendContend->getPostMeta('mailchimp_segment_id');
     $mailchimpEmail		    = $frontendContend->getPostMeta('mailchimp_email');
     $mailchimpExtraMessage  = $frontendContend->getPostMeta('mailchimp_extra_message');
@@ -96,9 +98,10 @@ add_action('sim_frontend_post_after_content', function($frontendContend){
         </div>
     </div>
     <?php
-});
+}
 
-add_action('sim_after_post_save', function($post){
+add_action('sim_after_post_save', __NAMESPACE__.'\afterPostSave');
+function afterPostSave($post){
 	//Mailchimp
     $segmentIds = explode(",", $_POST['mailchimp_segment_ids']);
 	if(is_array($segmentIds) && !empty($segmentIds)){
@@ -111,9 +114,10 @@ add_action('sim_after_post_save', function($post){
         delete_metadata( 'post', $post->ID,'mailchimp_email');
         delete_metadata( 'post', $post->ID,'mailchimp_extra_message');
     }
-});
+}
 
-add_action( 'wp_after_insert_post', function( $postId, $post ){
+add_action( 'wp_after_insert_post', __NAMESPACE__.'\afterInsertPost', 10, 3);
+function afterInsertPost( $postId, $post ){
     if(in_array($post->post_status, ['publish', 'inherit'])){
         $segmentIds     = (array) get_post_meta($postId, 'mailchimp_segment_ids', true);
         $from           = get_post_meta($postId, 'mailchimp_email', true);
@@ -143,4 +147,4 @@ add_action( 'wp_after_insert_post', function( $postId, $post ){
             delete_post_meta($postId,'mailchimp_extra_message');
         }
     }
-}, 10, 3);
+}

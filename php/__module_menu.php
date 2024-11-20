@@ -8,7 +8,8 @@ DEFINE(__NAMESPACE__.'\MODULE_SLUG', strtolower(basename(dirname(__DIR__))));
 
 DEFINE(__NAMESPACE__.'\MODULE_PATH', plugin_dir_path(__DIR__));
 
-add_filter('sim_submenu_options', function($optionsHtml, $moduleSlug, $settings){
+add_filter('sim_submenu_options', __NAMESPACE__.'\moduleOptions', 10, 3);
+function moduleOptions($optionsHtml, $moduleSlug, $settings){
 	//module slug should be the same as grandparent folder name
 	if($moduleSlug != MODULE_SLUG){
 		return $optionsHtml;
@@ -84,9 +85,10 @@ add_filter('sim_submenu_options', function($optionsHtml, $moduleSlug, $settings)
 	}
 
 	return ob_get_clean();
-}, 10, 3);
+}
 
-add_filter('sim_module_updated', function($newOptions, $moduleSlug, $oldOptions){
+add_filter('sim_module_updated', __NAMESPACE__.'\moduleUpdated', 10, 3);
+function moduleUpdated($newOptions, $moduleSlug, $oldOptions){
 	//module slug should be the same as grandparent folder name
 	if($moduleSlug != MODULE_SLUG){
 		return $newOptions;
@@ -95,4 +97,4 @@ add_filter('sim_module_updated', function($newOptions, $moduleSlug, $oldOptions)
 	scheduleTasks();
 
 	return $newOptions;
-}, 10, 3);
+}

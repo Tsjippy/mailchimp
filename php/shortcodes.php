@@ -3,7 +3,8 @@ namespace SIM\MAILCHIMP;
 use SIM;
 
 // shows a mailchimp campaign on the page
-add_shortcode("mailchimp", function($atts){
+add_shortcode("mailchimp", __NAMESPACE__.'\mailchimpCode');
+function mailchimpCode($atts){
 	$mailchimp = new Mailchimp();
 
 	$dom        = new \DomDocument();
@@ -19,4 +20,4 @@ add_shortcode("mailchimp", function($atts){
 	}
 
 	return "<style>table,td{border: none !important;}</style>".$dom->saveHTML($dom->getElementsByTagName('style')->item(0)).$content;
-});
+}

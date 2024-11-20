@@ -3,7 +3,8 @@ namespace SIM\MAILCHIMP;
 use SIM;
 
 // Load the js file to filter all blocks
-add_action( 'enqueue_block_editor_assets', function() {
+add_action( 'enqueue_block_editor_assets', __NAMESPACE__.'\blockAssets');
+function blockAssets() {
     wp_enqueue_script(
         'sim-mailchimp-block',
         SIM\pathToUrl(MODULE_PATH.'blocks/mailchimp_options/build/index.js'),
@@ -29,10 +30,11 @@ add_action( 'enqueue_block_editor_assets', function() {
         'mailchimp',
         $segments
     );
-});
+}
 
 // register custom meta tag field
-add_action( 'init', function(){
+add_action( 'init',  __NAMESPACE__.'\blockInit');
+function blockInit(){
 	register_post_meta( '', 'mailchimp_segment_id', array(
         'show_in_rest' 	    => true,
         'single' 		    => true,
@@ -53,4 +55,4 @@ add_action( 'init', function(){
         'type' 			    => 'string',
 		'sanitize_callback' => 'sanitize_text_field'
     ) );
-} );
+}
