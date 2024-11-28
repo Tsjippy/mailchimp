@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- e-mail send display
 
 ### Updated
 
