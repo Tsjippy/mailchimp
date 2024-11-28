@@ -42,10 +42,11 @@ function afterContent($frontendContend){
 
         if(is_array($sendSegment)){
             foreach($segments as $segment){
-                if($sendSegment == $segment->id){
+                if($sendSegment[0] == $segment->id){
                     $sendSegment    = $segment->name;
                 }
             }
+
             ?>
             <div class='warning' style='width: fit-content;'>
                 An e-mail has already been send to the <?php echo $sendSegment;?> group.
