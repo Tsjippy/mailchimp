@@ -21,7 +21,7 @@ function beforeContent($object){
 // add the mailchimp fields to the content creation form
 add_action('sim_frontend_post_after_content', __NAMESPACE__.'\afterContent');
 function afterContent($frontendContend){
-    $mailchimpSegmentIds    = $frontendContend->getPostMeta('mailchimp_segment_id');
+    $mailchimpSegmentIds    = $frontendContend->getPostMeta('mailchimp_segment_ids');
     $mailchimpEmail		    = $frontendContend->getPostMeta('mailchimp_email');
     $mailchimpExtraMessage  = $frontendContend->getPostMeta('mailchimp_extra_message');
     $Mailchimp              = new Mailchimp($frontendContend->user->ID);
@@ -143,9 +143,9 @@ function afterInsertPost( $postId, $post ){
             update_metadata( 'post', $postId, 'mailchimp_message_send', $segmentIds);
 
             //delete any post metakey
-            delete_post_meta($postId,'mailchimp_segment_ids');
-            delete_post_meta($postId,'mailchimp_email');
-            delete_post_meta($postId,'mailchimp_extra_message');
+            delete_post_meta($postId, 'mailchimp_segment_ids');
+            delete_post_meta($postId, 'mailchimp_email');
+            delete_post_meta($postId, 'mailchimp_extra_message');
         }
     }
 }

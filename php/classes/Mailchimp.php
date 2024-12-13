@@ -383,7 +383,6 @@ class Mailchimp{
 				$email		= $from;
 			}
 
-			//SIM\printArray("Creating mailchimp campain");
 			//Create an empty campain
 			try{
 				$createResult = $this->client->campaigns->create(

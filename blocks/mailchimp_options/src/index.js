@@ -28,7 +28,7 @@ registerPlugin( 'mailchimp-options', {
 
         const [ meta, setMeta ] = useEntityProp( 'postType', postType, 'meta' );
 
-        const mailchimpSegmentId	= meta[ 'mailchimp_segment_id' ];
+        const mailchimpSegmentId	= meta[ 'mailchimp_segment_ids' ];
         const mailchimpEmail		= meta[ 'mailchimp_email' ];
         const mailchimpExtraMessage	= meta[ 'mailchimp_extra_message' ];
 
@@ -50,7 +50,7 @@ registerPlugin( 'mailchimp-options', {
                         label={__("Mailchimp group")}
                         value={ mailchimpSegmentId }
                         options={ [{ label: 'Select one ...', value: '' }, ...mailchimp ]}
-                        onChange={ ( value ) => updateMetaValue( value, 'mailchimp_segment_id' ) }
+                        onChange={ ( value ) => updateMetaValue( value, 'mailchimp_segment_ids' ) }
                         __nextHasNoMarginBottom
                     />
                     <InputControl
