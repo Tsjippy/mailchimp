@@ -7,6 +7,7 @@
 
 ### Fixed
 - e-mail send display
+- mailing from backend
 
 ### Updated
 
