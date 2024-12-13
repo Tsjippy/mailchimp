@@ -6,10 +6,15 @@
 ### Changed
 
 ### Fixed
-- e-mail send display
-- mailing from backend
 
 ### Updated
+
+## [8.0.7] - 2024-12-13
+
+
+### Fixed
+- e-mail send display
+- mailing from backend
 
 ## [8.0.6] - 2024-11-20
 

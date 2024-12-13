@@ -2,7 +2,7 @@
 namespace SIM\MAILCHIMP;
 use SIM;
 
-const MODULE_VERSION		= '8.0.6';
+const MODULE_VERSION		= '8.0.7';
 //module slug is the same as grandparent folder name
 DEFINE(__NAMESPACE__.'\MODULE_SLUG', strtolower(basename(dirname(__DIR__))));
 
