@@ -282,11 +282,11 @@ class Mailchimp{
 	 * @return	string				The content with clickale links and mailchimp video tags
 	*/
 	private function processLinks($content, $postId){
-		$pattern = '~https?://([a-z]*?)\.([a-z]+)\.?([a-z]*)([^\s]*)~';
+		// Find all urls
+		$pattern = '~https?://([a-z]*?)\.([a-z]+)\.?([a-z]*)([^\s">]*)~';
 		preg_match_all($pattern, $content, $matches);
 
 		foreach($matches[0] as $index => $url){
-
 			$mailchimpSupportedVideoProviders   = [
 				'bliptv'    => 'BLIPTV',
 				'vimeo'     => 'VIMEO',
@@ -303,9 +303,8 @@ class Mailchimp{
 				$provider   = $mailchimpSupportedVideoProviders[$matches[2][$index]];
 			}
 
+			$newUrl	= '';
 			if($provider){
-				$videoTag	= "";
-
 				switch ($provider){
 					case 'BLIPTV':
 						$id = explode('.', explode('/play/', $matches[4][$index])[1])[0];
@@ -344,10 +343,21 @@ class Mailchimp{
 						// Merge with a playbutton
 						// Create image instances
 						$dest		= imagecreatefromjpeg($thumbnailUrl);
-						$src		= imagecreatefrompng(ABSPATH."wp-content/sim-modules/mailchimp/pictures/play-mq.png");
+						if(!$dest){
+							SIM\printArray("Creating image failed for $thumbnailUrl");
+
+							return false;
+						}
 
 						$width  	= imagesx($dest);
 						$height 	= imagesy($dest);
+
+						$src		= imagecreatefrompng(ABSPATH."wp-content/sim-modules/mailchimp/pictures/play-mq.png");
+						if(!$src){
+							SIM\printArray("Creating image failed for ".ABSPATH."wp-content/sim-modules/mailchimp/pictures/play-mq.png");
+
+							return false;
+						}
 
 						$srcWidth  	= imagesx($src);
 						$srcHeight 	= imagesy($src);
@@ -367,26 +377,34 @@ class Mailchimp{
 
 						$url			= trim($url, '"');
 
-						$videoTag		= "<a href='$url&autoplay=1'><img src='$thumbnailUrl'/></a>";
+						$newUrl		= "<a href='$url&autoplay=1'><img src='$thumbnailUrl'/></a>";
+
 						break;
 					default:
 						$id = explode('/', $matches[4][$index])[1];
 				}
 
-				if(empty($videoTag)){
-					$videoTag    = "*|$provider:[\$vid=$id]|*";
-				}
-
-				//Check if in iframe
-				$pregUrl	= trim(preg_quote($url, '/'), '"');
-				
-				if(preg_match("/<iframe.*src=\"$pregUrl\".*><\/iframe>/isU", $content, $iframes)){
-					$content    = str_replace($iframes[0], $videoTag, $content);
-				}else{
-					$content    = str_replace($url, $videoTag, $content);
+				if(empty($newUrl)){
+					$newUrl    = "*|$provider:[\$vid=$id]|*";
 				}
 			}else{
-				$content    = str_replace($url, "<a href='$url'>$url</a>", $content);
+				if(is_array(getimagesize($url))){
+					$alt	= explode('/', $url);
+					$alt	= $alt[count($alt) - 1];
+					$url	= "<img src='$url' alt='$alt'>";
+				}
+				$newUrl	= "<a href='$url'>$url</a>";
+			}
+
+			//Check if in iframe
+			$pregUrl	= trim(preg_quote($url, '/'), '"');
+				
+			if(preg_match("/<iframe.*src=\"$pregUrl\".*><\/iframe>/isU", $content, $iframes)){
+				$content    = str_replace($iframes[0], $newUrl, $content);
+			}elseif(preg_match("/<div class=\"wp-block-image\">.*$pregUrl.*<\/div>/isU", $content, $blocks)){
+				$content    = str_replace($blocks[0], $newUrl, $content);
+			}else{
+				$content    = str_replace($url, $newUrl, $content);
 			}
 		}
 
@@ -481,7 +499,7 @@ class Mailchimp{
 			$mailContent 		= apply_filters( 'the_content', get_the_content(null, false, $postId));
 
 			//Update the html
-			$mailContent		= $extraMessage.'<br>'.$this->removeGreeting($post->post_content).$finalMessage;
+			$mailContent		= $extraMessage.'<br>'.$this->removeGreeting($mailContent ).$finalMessage;
 
 			$mailContent		= $this->processLinks($mailContent, $postId);
 
