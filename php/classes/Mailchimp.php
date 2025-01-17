@@ -281,11 +281,12 @@ class Mailchimp{
 	 *
 	 * @return	string				The content with clickale links and mailchimp video tags
 	*/
-	private function processLinks($content){
+	private function processLinks($content, $postId){
 		$pattern = '~https?://([a-z]*?)\.([a-z]+)\.?([a-z]*)([^\s]*)~';
 		preg_match_all($pattern, $content, $matches);
 
 		foreach($matches[0] as $index => $url){
+
 			$mailchimpSupportedVideoProviders   = [
 				'bliptv'    => 'BLIPTV',
 				'vimeo'     => 'VIMEO',
@@ -303,6 +304,8 @@ class Mailchimp{
 			}
 
 			if($provider){
+				$videoTag	= "";
+
 				switch ($provider){
 					case 'BLIPTV':
 						$id = explode('.', explode('/play/', $matches[4][$index])[1])[0];
@@ -314,19 +317,74 @@ class Mailchimp{
 						$id = explode('/', $matches[4][$index])[2];
 						break;
 					case 'YOUTUBE':
-						$id = explode('/watch?v=', $matches[4][$index])[1];
-
-						if(empty($id)){
+						if(str_contains($matches[4][$index], '/watch?v=')){
+							$id = explode('/watch?v=', $matches[4][$index])[1];
+						}elseif(str_contains($matches[4][$index], '/embed/')){
+							$id = explode('/', $matches[4][$index])[2];
+							$id	= explode('?', $id)[0];
+						}else{
 							$id = explode('/', $matches[4][$index])[1];
 						}
+
+						// YOUTUBE does not work, get an clickable picture instead
+						$thumbnailUrl = "https://img.youtube.com/vi/$id/hqdefault.jpg";
+
+						$ch = curl_init();
+						curl_setopt($ch, CURLOPT_URL, $thumbnailUrl);
+						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+						curl_setopt($ch, CURLOPT_NOBODY, 1);
+						curl_exec($ch);
+						$responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+						curl_close($ch);
+
+						if($responseCode != 200) {
+							$thumbnailUrl = "https://img.youtube.com/vi/$id/mqdefault.jpg";
+						}
+
+						// Merge with a playbutton
+						// Create image instances
+						$dest		= imagecreatefromjpeg($thumbnailUrl);
+						$src		= imagecreatefrompng(ABSPATH."wp-content/sim-modules/mailchimp/pictures/play-mq.png");
+
+						$width  	= imagesx($dest);
+						$height 	= imagesy($dest);
+
+						$srcWidth  	= imagesx($src);
+						$srcHeight 	= imagesy($src);
+						
+						// Copy and merge
+						imagecopy($dest, $src, ($width - $srcWidth)/2, ($height - $srcHeight) / 2, 0, 0, $srcWidth, $srcHeight);
+						
+						// Output and free from memory
+						$path			= ABSPATH."wp-content/sim-modules/mailchimp/pictures/$postId.jpg";
+
+						imagejpeg($dest, $path);
+
+						$thumbnailUrl	= SIM\pathToUrl($path);
+						
+						imagedestroy($dest);
+						imagedestroy($src);
+
+						$url			= trim($url, '"');
+
+						$videoTag		= "<a href='$url&autoplay=1'><img src='$thumbnailUrl'/></a>";
 						break;
 					default:
 						$id = explode('/', $matches[4][$index])[1];
 				}
 
-				$videoTag    = "*|$provider:[\$vid=$id]|*";
+				if(empty($videoTag)){
+					$videoTag    = "*|$provider:[\$vid=$id]|*";
+				}
 
-				$content    = str_replace($url, $videoTag, $content);
+				//Check if in iframe
+				$pregUrl	= trim(preg_quote($url, '/'), '"');
+				
+				if(preg_match("/<iframe.*src=\"$pregUrl\".*><\/iframe>/isU", $content, $iframes)){
+					$content    = str_replace($iframes[0], $videoTag, $content);
+				}else{
+					$content    = str_replace($url, $videoTag, $content);
+				}
 			}else{
 				$content    = str_replace($url, "<a href='$url'>$url</a>", $content);
 			}
@@ -419,10 +477,13 @@ class Mailchimp{
 			//Get the campain id
 			$campainId 			= $createResult->id;
 
+			// Get the rendered mail content
+			$mailContent 		= apply_filters( 'the_content', get_the_content(null, false, $postId));
+
 			//Update the html
 			$mailContent		= $extraMessage.'<br>'.$this->removeGreeting($post->post_content).$finalMessage;
 
-			$mailContent		= $this->processLinks($mailContent);
+			$mailContent		= $this->processLinks($mailContent, $postId);
 
 			$template			= SIM\getModuleOption(MODULE_SLUG, 'mailchimp_html');
 
