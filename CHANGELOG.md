@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- video preview in mails
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [8.0.8] - 2025-01-17
+
+
+### Added
+- video preview in mails
 
 ## [8.0.7] - 2024-12-13
 
