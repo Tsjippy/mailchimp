@@ -134,10 +134,14 @@ function moduleData($dataHtml, $moduleSlug, $settings){
 
 					if(!empty($_POST['member']) && $_POST['member'] == $member->id){
 						// removed
-						array_diff($_POST['tags'], $memberTagNames);
+						$removed	= array_diff($memberTagNames, $_POST['tags']);
+						foreach($removed as $tagname){
+							$mailchimp->setTag($tagname, 'inactive');
+						}
 
 						// Added
-						foreach($_POST['tags'] as $tagname){
+						$added		= array_diff($_POST['tags'], $memberTagNames);
+						foreach($added as $tagname){
 							$mailchimp->setTag($tagname, 'active');
 						}
 					}
@@ -145,14 +149,14 @@ function moduleData($dataHtml, $moduleSlug, $settings){
 					$tagSelect			= "<form action='' method='post'>";
 						$tagSelect			.= "<input type=hidden name='email' value='$member->email_address'>";
 						$tagSelect			.= "<input type=hidden name='member' value='$member->id'>";
-						$tagSelect			.= "<select name='tags[]' multiple onchange='this.closest(`form`).querySelector(`button`).classList.remove(`hidden`)'>";
+						$tagSelect			.= "<select name='tags[]' id='$member->id' multiple onchange='this.closest(`form`).querySelector(`button`).classList.remove(`hidden`)'>";
 							foreach($allTags as $tag){
 								if(in_array($tag->id, $memberTags)){
 									$selected	= 'selected';
 								}else{
 									$selected	= '';
 								}
-								$tagSelect	.= "<option $selected>$tag->name</option>";
+								$tagSelect	.= "<option value='$tag->name' $selected>$tag->name</option>";
 							}
 						$tagSelect			.= "</select>";
 						$tagSelect			.= "<button class='hidden'>Submit</button>";
