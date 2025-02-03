@@ -2,14 +2,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- audience overview
 
 ### Changed
 
 ### Fixed
-- add or remove tags
 
 ### Updated
+
+## [8.1.0] - 2025-02-03
+
+
+### Added
+- audience overview
+
+### Fixed
+- add or remove tags
 
 ## [8.0.9] - 2025-01-17
 
