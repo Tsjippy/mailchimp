@@ -180,7 +180,7 @@ class Mailchimp{
 	 */
 	public function getLists(){
 		try {
-			$lists = $this->client->lists->getAllLists();
+			$lists = $this->client->lists->getAllLists(null, null, 999);
 			return $lists->lists;
 		}
 
@@ -195,6 +195,17 @@ class Mailchimp{
 			SIM\printArray($errorResult);
 			return $errorResult;
 		}
+	}
+
+	/**
+	 * Get a list of members of a certain audience
+	 *
+	 * @param	string	$listId		The id of the list you want to get the members of
+	 */
+	public function getListMembersInfo($listId){
+		$members = $this->client->lists->getListMembersInfo($listId, null, null, 999, '0', null, "subscribed")->members;
+		
+		return $members;
 	}
 
 	/**
@@ -238,7 +249,7 @@ class Mailchimp{
 	 * @param	string	$tagname	the name of the tag
 	 * @param	string	$status		active or inactive
 	 *
-	 * @return	true|WP_Error				true on succes else failure
+	 * @return	true|WP_Error		true on succes else failure
 	 */
 	public function setTag($tagname, $status){
 		try {
@@ -247,8 +258,8 @@ class Mailchimp{
 				md5(strtolower($this->user->user_email)),
 				['tags'=> [
 					[
-						"name" => $tagname,
-						"status" => $status
+						"name" 		=> $tagname,
+						"status" 	=> $status
 					]
 				]]
 			);
@@ -566,7 +577,7 @@ class Mailchimp{
 				$this->settings['audienceids'][0], 	//Audience id
 				null, 						// Fields to return
 				null,						// Fields to return
-				100,						// Maximum amount of segments
+				999,						// Maximum amount of segments
 				0,							// Offset
 				'saved'						// Only export segments, not tags
 			);
