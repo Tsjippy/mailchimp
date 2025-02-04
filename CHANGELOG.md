@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- async sending of mailchimp campaigns
 
 ### Changed
 
