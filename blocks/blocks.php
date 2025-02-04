@@ -35,14 +35,26 @@ function blockAssets() {
 // register custom meta tag field
 add_action( 'init',  __NAMESPACE__.'\blockInit');
 function blockInit(){
-	register_post_meta( '', 'mailchimp_segment_ids', array(
-        'show_in_rest' 	    => true,
-        'single' 		    => true,
-        'type' 			    => 'integer',
-		'sanitize_callback' => 'sanitize_text_field'
-    ) );
+	$result=register_post_meta( 
+        '', 
+        'mailchimp_segment_ids', 
+        [
+            'show_in_rest' => [
+                'schema' => [
+                    'type'  => 'array',
+                    'items' => [
+                        'type' => 'number',
+                    ],
+                ]
+            ],
+            'single' 		    => false,
+            'type' 			    => 'array',
+            'default'	        => 'test',
+            'single'            => true
+        ]
+    );
 
-	register_post_meta( '', 'mailchimp_email', array(
+	$result=register_post_meta( '', 'mailchimp_email', array(
         'show_in_rest' 	    => true,
         'single' 		    => true,
         'type' 			    => 'string',

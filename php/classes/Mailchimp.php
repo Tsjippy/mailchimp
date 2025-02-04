@@ -180,7 +180,7 @@ class Mailchimp{
 	 */
 	public function getLists(){
 		try {
-			$lists = $this->client->lists->getAllLists(null, null, 999);
+			$lists = $this->client->lists->getAllLists(null, null, 999, 'saved');
 			return $lists->lists;
 		}
 

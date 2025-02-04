@@ -55,6 +55,7 @@ function afterContent($frontendContend){
         }
         ?>
         <script>
+            console.log('showMailChimp');
             function showMailChimp(el){
                 if(el.value == ''){
                     el.closest('div').querySelectorAll('.mailchimp-wrapper').forEach(el => el.classList.add('hidden'));
@@ -107,20 +108,20 @@ function afterPostSave($post){
     $segmentIds = explode(",", $_POST['mailchimp_segment_ids']);
 	if(is_array($segmentIds) && !empty($segmentIds)){
         $extraMessage   = str_replace("\n", '<br>', sanitize_text_field($_POST['mailchimp-extra-message']));
-        update_metadata( 'post', $post->ID,'mailchimp_segment_ids', $segmentIds);
-        update_metadata( 'post', $post->ID,'mailchimp_email', $_POST['mailchimp_email']);
-        update_metadata( 'post', $post->ID,'mailchimp_extra_message', $extraMessage);
+        update_metadata( 'post', $post->ID, 'mailchimp_segment_ids', $segmentIds);
+        update_metadata( 'post', $post->ID, 'mailchimp_email', $_POST['mailchimp_email']);
+        update_metadata( 'post', $post->ID, 'mailchimp_extra_message', $extraMessage);
     }else{
-        delete_metadata( 'post', $post->ID,'mailchimp_segment_ids');
-        delete_metadata( 'post', $post->ID,'mailchimp_email');
-        delete_metadata( 'post', $post->ID,'mailchimp_extra_message');
+        delete_metadata( 'post', $post->ID, 'mailchimp_segment_ids');
+        delete_metadata( 'post', $post->ID, 'mailchimp_email');
+        delete_metadata( 'post', $post->ID, 'mailchimp_extra_message');
     }
 }
 
 add_action( 'wp_after_insert_post', __NAMESPACE__.'\afterInsertPost', 10, 3);
 function afterInsertPost( $postId, $post ){
     if(in_array($post->post_status, ['publish', 'inherit'])){
-        $segmentIds     = (array) get_post_meta($postId, 'mailchimp_segment_ids', true);
+        $segmentIds     = get_post_meta($postId, 'mailchimp_segment_ids', true);
         $from           = get_post_meta($postId, 'mailchimp_email', true);
         $extraMessage   = get_post_meta($postId, 'mailchimp_extra_message', true);
 

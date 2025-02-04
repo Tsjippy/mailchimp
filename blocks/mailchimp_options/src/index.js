@@ -2,7 +2,7 @@ const { __ }                            = wp.i18n;
 const { registerPlugin }                = wp.plugins;
 import { SelectControl,  __experimentalInputControl as InputControl } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
-import { PluginDocumentSettingPanel } from '@wordpress/edit-post';
+import { PluginDocumentSettingPanel } from '@wordpress/editor';
 import { useEntityProp } from '@wordpress/core-data';
 
 const mailchimpIcon = () => {
@@ -28,16 +28,28 @@ registerPlugin( 'mailchimp-options', {
 
         const [ meta, setMeta ] = useEntityProp( 'postType', postType, 'meta' );
 
-        const mailchimpSegmentId	= meta[ 'mailchimp_segment_ids' ];
+        console.log(postType);
+        console.log(meta);
+
+        const mailchimpSegmentIds	= meta[ 'mailchimp_segment_ids' ];
         const mailchimpEmail		= meta[ 'mailchimp_email' ];
         const mailchimpExtraMessage	= meta[ 'mailchimp_extra_message' ];
 
         const updateMetaValue = ( value, key ) => {
+            console.log(value);
+            console.log(key);
             let newMeta	= { ...meta };
+
+            if(Array.isArray(value)){
+                //value   = JSON.stringify(value);
+                console.log(value);
+            }
 
             newMeta[key]	= value;
     
+            console.log('before');
             setMeta( newMeta );
+            console.log('after');
         };
     
         return (
@@ -47,23 +59,24 @@ registerPlugin( 'mailchimp-options', {
                     className="mailchimp-options"
                 >
                     <SelectControl
-                        label={__("Mailchimp group")}
-                        value={ mailchimpSegmentId }
-                        options={ [{ label: 'Select one ...', value: '' }, ...mailchimp ]}
-                        onChange={ ( value ) => updateMetaValue( value, 'mailchimp_segment_ids' ) }
+                        multiple
+                        label       = {__("Mailchimp group")}
+                        value       = { mailchimpSegmentIds }
+                        options     = { [ ...mailchimp ]}
+                        onChange    = { ( value ) => updateMetaValue( value, 'mailchimp_segment_ids' ) }
                         __nextHasNoMarginBottom
                     />
                     <InputControl
-                        isPressEnterToChange={true}
-                        label={__("From email address")}
-                        value={ mailchimpEmail }
-                        onChange={(value) => updateMetaValue( value, 'mailchimp_email' )}
+                        isPressEnterToChange    = {true}
+                        label                   = {__("From email address")}
+                        value                   = { mailchimpEmail }
+                        onChange                = {(value) => updateMetaValue( value, 'mailchimp_email' )}
                     />
                     <InputControl
-                        isPressEnterToChange={true}
-                        label={__("Prepend message")}
-                        value={ mailchimpExtraMessage }
-                        onChange={(value) => updateMetaValue( value, 'mailchimp_extra_message' )}
+                        isPressEnterToChange    = {true}
+                        label                   = {__("Prepend message")}
+                        value                   = { mailchimpExtraMessage }
+                        onChange                = {(value) => updateMetaValue( value, 'mailchimp_extra_message' )}
                     />
                 </PluginDocumentSettingPanel>
         );
