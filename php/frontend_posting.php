@@ -121,32 +121,37 @@ function afterPostSave($post){
 add_action( 'wp_after_insert_post', __NAMESPACE__.'\afterInsertPost', 10, 3);
 function afterInsertPost( $postId, $post ){
     if(in_array($post->post_status, ['publish', 'inherit'])){
-        $segmentIds     = get_post_meta($postId, 'mailchimp_segment_ids', true);
-        $from           = get_post_meta($postId, 'mailchimp_email', true);
-        $extraMessage   = get_post_meta($postId, 'mailchimp_extra_message', true);
+        // send asynchronous as sending a campaign is slow
+        wp_schedule_single_event(time(), 'schedule_mailchimp_campaign', [$postId]);
+    }
+}
 
-        if(empty($segmentIds) || empty($from)){
-            return;
+function asyncMailchimpCampaign($postId){
+    $segmentIds     = get_post_meta($postId, 'mailchimp_segment_ids', true);
+    $from           = get_post_meta($postId, 'mailchimp_email', true);
+    $extraMessage   = get_post_meta($postId, 'mailchimp_extra_message', true);
+
+    if(empty($segmentIds) || empty($from)){
+        return;
+    }
+
+    //Send mailchimp message
+    $Mailchimp  = new Mailchimp();
+    foreach($segmentIds as $segmentId){
+        if(!is_numeric($segmentId)){
+            continue;
         }
 
-        //Send mailchimp message
-        $Mailchimp  = new Mailchimp();
-        foreach($segmentIds as $segmentId){
-            if(!is_numeric($segmentId)){
-                continue;
-            }
+        $result     = $Mailchimp->sendEmail($postId, intval($segmentId), $from, $extraMessage);
+    }
 
-            $result     = $Mailchimp->sendEmail($postId, intval($segmentId), $from, $extraMessage);
-        }
+    // Indicate as send
+    if($result == 'succes'){
+        update_metadata( 'post', $postId, 'mailchimp_message_send', $segmentIds);
 
-        // Indicate as send
-        if($result == 'succes'){
-            update_metadata( 'post', $postId, 'mailchimp_message_send', $segmentIds);
-
-            //delete any post metakey
-            delete_post_meta($postId, 'mailchimp_segment_ids');
-            delete_post_meta($postId, 'mailchimp_email');
-            delete_post_meta($postId, 'mailchimp_extra_message');
-        }
+        //delete any post metakey
+        delete_post_meta($postId, 'mailchimp_segment_ids');
+        delete_post_meta($postId, 'mailchimp_email');
+        delete_post_meta($postId, 'mailchimp_extra_message');
     }
 }

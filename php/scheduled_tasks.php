@@ -5,6 +5,9 @@ use SIM;
 add_action('init', function(){
 	//add action for use in scheduled task
 	add_action( 'add_mailchimp_campaigns_action', __NAMESPACE__.'\addMailchimpCampaigns' );
+
+    // needed for async signal messages
+    add_action( 'schedule_mailchimp_campaign', __NAMESPACE__.'\asyncMailchimpCampaign');
 });
 
 function scheduleTasks(){
