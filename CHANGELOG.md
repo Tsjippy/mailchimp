@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- async sending of mailchimp campaigns
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [8.1.2] - 2025-02-04
+
+
+### Added
+- async sending of mailchimp campaigns
 
 ## [8.1.1] - 2025-02-04
 
