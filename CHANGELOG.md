@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- mailchimp block segment ids not saved
 
 ### Updated
+
+## [8.1.1] - 2025-02-04
+
+
+### Fixed
+- mailchimp block segment ids not saved
 
 ## [8.1.0] - 2025-02-03
 
