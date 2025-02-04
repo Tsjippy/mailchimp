@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- mailchimp block segment ids not saved
 
 ### Updated
 
