@@ -97,17 +97,17 @@ function moduleData($dataHtml, $moduleSlug, $settings){
 	$mailchimp = new Mailchimp();
 
 	ob_start();
-	if(isset($_GET['delete-campaign'])){
-		$response	= $mailchimp->deleteCampaign($_GET['delete-campaign']);
+	if(isset($_POST['delete-campaign']) && wp_verify_nonce($_POST['nonce'], 'delete-mailchimp-campaign')){
+		$response	= $mailchimp->deleteCampaign($_POST['delete-campaign']);
 
 		if(empty($response)){
 			?>
-			<div class='success'>Campaign <?php echo $_GET['delete-campaign'];?> deleted successfully</div>
+			<div class='success'>Campaign <?php echo $_POST['delete-campaign'];?> deleted successfully</div>
 			<?php
 		}else{
 			?>
 			<div class='error'>
-				Campaign <?php echo $_GET['delete-campaign'];?> could not be deleted<br>
+				Campaign <?php echo $_POST['delete-campaign'];?> could not be deleted<br>
 				<?php echo $response;?>
 			</div>
 			<?php
@@ -200,6 +200,8 @@ function moduleData($dataHtml, $moduleSlug, $settings){
 
     // get all mailchimp campaigns created this year
     $result		= $mailchimp->getCampaigns(date("Y-m-d", strtotime('-1 year')).'T00:00:00+00:00');
+
+	$nonce		= wp_create_nonce('delete-mailchimp-campaign');
 	
 	?>
 	<div class='tabcontent <?php if($tab != 'campaigns'){echo 'hidden';}?>' id='campaigns'>
@@ -226,14 +228,20 @@ function moduleData($dataHtml, $moduleSlug, $settings){
 
 				$openRate	= round($campaign->report_summary->open_rate * 100 , 1).'%';
 
-				$url		= SIM\getCurrentUrl()."&delete-campaign=$campaign->id";
-
 				echo "<tr data-id='$campaign->id'>";
 					echo "<td>$title</td>";
 					echo "<td>{$campaign->recipients->segment_text}</td>";
 					echo "<td>$dateSent</td>";
 					echo "<td>$openRate</td>";
-					echo "<td><a href='$url' class='button sim small'>Delete</a></td>";
+					?>
+					<td>
+						<form method='POST'>
+							<input type='hidden' name='delete-campaign'	value='<?php echo $campaign->id;?>'>
+							<input type='hidden' name='nonce' value='<?php echo $nonce;?>'>
+							<button type='submit'>Delete</button>
+						</form>
+					</td>
+					<?php
 				echo "</tr>";
 			}
 		?>
