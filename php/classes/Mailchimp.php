@@ -180,6 +180,7 @@ class Mailchimp{
 	 */
 	public function getLists(){
 		try {
+			/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
 			$lists = $this->client->lists->getAllLists(null, null, 999, 'saved');
 			return $lists->lists;
 		}
@@ -203,6 +204,7 @@ class Mailchimp{
 	 * @param	string	$listId		The id of the list you want to get the members of
 	 */
 	public function getListMembersInfo($listId){
+		/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
 		$members = $this->client->lists->getListMembersInfo($listId, null, null, 999, '0', null, "subscribed")->members;
 		
 		return $members;
@@ -222,6 +224,7 @@ class Mailchimp{
 				$email = $this->user->user_email;
 			}
 			
+			/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
 			return $this->client->lists->setListMember(
 				$this->settings['audienceids'][0],
 				md5(strtolower($email)),
@@ -253,6 +256,8 @@ class Mailchimp{
 	 */
 	public function setTag($tagname, $status){
 		try {
+
+			/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
 			$this->client->lists->updateListMemberTags(
 				$this->settings['audienceids'][0],
 				md5(strtolower($this->user->user_email)),
@@ -472,6 +477,7 @@ class Mailchimp{
 
 			//Create an empty campain
 			try{
+				/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
 				$createResult = $this->client->campaigns->create(
 					[
 						"type" 			=> "regular",
@@ -521,6 +527,7 @@ class Mailchimp{
 			$mailContent 		= str_replace('%content%', $mailContent, $template, $count);
 
 			//Push the new content
+			/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
 			$setContentResult = $this->client->campaigns->setContent(
 				$campainId,
 				[
@@ -529,6 +536,7 @@ class Mailchimp{
 			);
 
 			//Send the campain
+			/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
 			$sendResult = $this->client->campaigns->send($campainId);
 
 			// Indicate as send
@@ -573,6 +581,7 @@ class Mailchimp{
 		}
 
 		try {
+			/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
 			$response = $this->client->lists->listSegments(
 				$this->settings['audienceids'][0], 	//Audience id
 				null, 						// Fields to return
@@ -609,6 +618,7 @@ class Mailchimp{
 	 */
 	public function getTemplates(){
 		try {
+			/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
 			$response = $this->client->templates->list(
 				null,		//fields
 				null,		// excludeFields
@@ -660,6 +670,7 @@ class Mailchimp{
 	 * @param	int		$id		The campaign Id.
 	 */
 	public function getCampaign($id){
+		/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
 		return $this->client->campaigns->get($id);
 	}
 
@@ -673,6 +684,37 @@ class Mailchimp{
 	public function getCampaigns($sendAfter){
 		$count			= 1000;
 		$sort			= "send_time";
-		return $this->client->campaigns->list(null, null, $count, 0, null, null, null, $sendAfter, null, null, null, null, null, $sort);
+
+		//lint:ignore S1001 test
+		/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
+		return $this->client->campaigns->list(null, null, $count, 0, null, null, null, $sendAfter, null, null, null, null, null, $sort, 'DSC');
+	}
+
+	/**
+	 * Deletes a given campaign
+	 *
+	 * @param	string	$campaignId		The id of the campaign
+	 */
+	public function deleteCampaign($campaignId){
+		try{
+			/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
+			$response = $this->client->campaigns->remove($campaignId);
+		}
+		//catch exception
+		catch(\GuzzleHttp\Exception\ClientException $e){
+			$result			= json_decode($e->getResponse()->getBody()->getContents());
+			$errorResult	= $result->detail;
+			if(isset($result->errors)){
+				$errorResult	.= "<pre>".print_r($result->errors, true)."</pre>";
+			}
+			
+			return $errorResult;
+		}catch(\Exception $e) {
+			$errorResult = $e->getMessage();
+			SIM\printArray($errorResult);
+			return $errorResult;
+		}
+
+		return $response;
 	}
 }

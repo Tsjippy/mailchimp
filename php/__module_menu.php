@@ -97,15 +97,36 @@ function moduleData($dataHtml, $moduleSlug, $settings){
 	$mailchimp = new Mailchimp();
 
 	ob_start();
-	?>
-	<br>
-	<label>
-		Mailchimp audience(s) you want new users added to:<br>
-		<?php
-		
-		$lists 	= (array)$mailchimp->getLists();
+	if(isset($_GET['delete-campaign'])){
+		$response	= $mailchimp->deleteCampaign($_GET['delete-campaign']);
 
-		echo "<table class='sim-table'>";
+		if(empty($response)){
+			?>
+			<div class='success'>Campaign <?php echo $_GET['delete-campaign'];?> deleted successfully</div>
+			<?php
+		}else{
+			?>
+			<div class='error'>
+				Campaign <?php echo $_GET['delete-campaign'];?> could not be deleted<br>
+				<?php echo $response;?>
+			</div>
+			<?php
+		}
+	}
+	
+	$lists 	= (array)$mailchimp->getLists();
+
+	$tab	= $_GET['second_tab'];
+
+	?>
+	<div class='tablink-wrapper'>
+		<button class="tablink <?php if(empty($tab) || $tab == 'audience'){echo 'active';}?>" id="show_audience" data-target="audience" >Audiences</button>
+		<button class="tablink <?php if($tab == 'campaigns'){echo 'active';}?>" id="show_campaigns" data-target="campaigns">Campaigns</button>
+	</div>	
+	
+	<div class='tabcontent <?php if(!empty($tab) && $tab != 'audience'){echo 'hidden';}?>' id='audience'>
+		<table class='sim-table'>
+			<?php
 			foreach ($lists as $key=>$list){
 				$allTags	= $mailchimp->getSegments();
 
@@ -174,39 +195,55 @@ function moduleData($dataHtml, $moduleSlug, $settings){
 			}
 			?>
 		</table>
-	</label>
+	</div>
+	<?php
+
+    // get all mailchimp campaigns created this year
+    $result		= $mailchimp->getCampaigns(date("Y-m-d", strtotime('-1 year')).'T00:00:00+00:00');
+	
+	?>
+	<div class='tabcontent <?php if($tab != 'campaigns'){echo 'hidden';}?>' id='campaigns'>
+		<table class='sim-table'>
+			<tr>
+				<th>Title</th>
+				<th>Recipients</th>
+				<th>Sent</th>
+				<th>Open Rate</th>
+				<th>Delete</th>
+			</tr>
+			<?php
+			foreach($result->campaigns as $campaign){
+				$title	= $campaign->settings->title;
+				if(empty($title)){
+					if(!empty($campaign->settings->subject_line)){
+						$title	= $campaign->settings->subject_line;
+					}
+				}
+
+				$title		= "<a href='$campaign->long_archive_url' target='_blank'>$title</a>";
+
+				$dateSent	= date('d-m-Y H:m', strtotime($campaign->send_time));
+
+				$openRate	= round($campaign->report_summary->open_rate * 100 , 1).'%';
+
+				$url		= SIM\getCurrentUrl()."&delete-campaign=$campaign->id";
+
+				echo "<tr data-id='$campaign->id'>";
+					echo "<td>$title</td>";
+					echo "<td>{$campaign->recipients->segment_text}</td>";
+					echo "<td>$dateSent</td>";
+					echo "<td>$openRate</td>";
+					echo "<td><a href='$url' class='button sim small'>Delete</a></td>";
+				echo "</tr>";
+			}
+		?>
+		</table>
+	</div>
 	<?php
 
 	$dataHtml	= ob_get_clean();
 
 	return $dataHtml;
-}
-
-add_filter('sim_module_functions', __NAMESPACE__.'\moduleFunctions', 10, 2);
-function moduleFunctions($functionHtml, $moduleSlug){
-	//module slug should be the same as grandparent folder name
-	if($moduleSlug != MODULE_SLUG){
-		return $functionHtml;
-	}
-	
-	ob_start();
-	?>
-	<h4>Form import</h4>
-	<p>
-		It is possible to import forms exported from this plugin previously.<br>
-		Use the button below to do so.
-	</p>
-	<form method='POST' enctype="multipart/form-data">
-		<label>
-			Select a form export file
-			<input type='file' name='formfile'>
-		</label>
-		<br>
-		<button type='submit' name='import-form'>Import the form</button>
-	</form>
-
-	<?php
-	return ob_get_clean();
 }
 
 add_filter('sim_module_updated', __NAMESPACE__.'\moduleUpdated', 10, 3);

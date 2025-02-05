@@ -137,16 +137,21 @@ function asyncMailchimpCampaign($postId){
 
     //Send mailchimp message
     $Mailchimp  = new Mailchimp();
+    $segmentIdsSent  = [];
     foreach($segmentIds as $segmentId){
         if(!is_numeric($segmentId)){
             continue;
         }
 
         $result     = $Mailchimp->sendEmail($postId, intval($segmentId), $from, $extraMessage);
+
+        if($result == 'succes'){
+            $segmentIdsSent[]   = $segmentId;
+        }
     }
 
     // Indicate as send
-    if($result == 'succes'){
+    if(!empty($segmentIdsSent)){
         update_metadata( 'post', $postId, 'mailchimp_message_send', $segmentIds);
 
         //delete any post metakey
