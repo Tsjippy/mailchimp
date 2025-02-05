@@ -3,6 +3,7 @@
 
 ### Added
 - campaigns overview
+- campaign delete form
 
 ### Changed
 
