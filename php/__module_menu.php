@@ -128,7 +128,7 @@ function moduleData($dataHtml, $moduleSlug, $settings){
 		<table class='sim-table'>
 			<?php
 			foreach ($lists as $key=>$list){
-				$allTags	= $mailchimp->getSegments();
+				$allTags	= $mailchimp->getSegments('static');
 
 				?>
 				<tr>
@@ -144,6 +144,10 @@ function moduleData($dataHtml, $moduleSlug, $settings){
 				<?php
 
 				$members	= $mailchimp->getListMembersInfo($list->id);
+				usort($members, function ($list1, $list2) { 
+					return strtolower($list1->full_name) > strtolower($list2->full_name); 
+				} ); 
+
 				foreach($members as $member){
 					$memberSince	= date('d-m-Y', strtotime($member->timestamp_opt));
 					$memberTags		= [];

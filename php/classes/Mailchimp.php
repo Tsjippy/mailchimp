@@ -566,9 +566,10 @@ class Mailchimp{
 	 * Get an array of available segements in the audience
 	 * Store in transient for 24 hours as this is a slow action
 	 *
-	 * @return	array|string	Segments array or error string
+	 * @param	string			$type	The Segment type one of "all", "saved", "static", or "fuzzy"
+	 * @return	array|string			Segments array or error string
 	 */
-	public function getSegments(){
+	public function getSegments($type='saved'){
 		if(empty($this->settings['audienceids'][0])){
 			$error	= 'No Audience defined in mailchimp module settings';
 			SIM\printArray($error);
@@ -580,16 +581,21 @@ class Mailchimp{
 			return $segments;
 		}
 
+		$params	= [
+			$this->settings['audienceids'][0], 	//Audience id
+			null, 						// Fields to return
+			null,						// Fields to return
+			999,						// Maximum amount of segments
+			0,							// Offset
+		];
+
+		if($type != 'all'){
+			$params[]	= $type;
+		}
+
 		try {
 			/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
-			$response = $this->client->lists->listSegments(
-				$this->settings['audienceids'][0], 	//Audience id
-				null, 						// Fields to return
-				null,						// Fields to return
-				999,						// Maximum amount of segments
-				0,							// Offset
-				'saved'						// Only export segments, not tags
-			);
+			$response = $this->client->lists->listSegments(	...$params);
 
 			usort($response->segments, function ($list1, $list2) { 
 				return strtolower($list1->name) > strtolower($list2->name); 
