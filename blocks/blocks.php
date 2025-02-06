@@ -35,7 +35,7 @@ function blockAssets() {
 // register custom meta tag field
 add_action( 'init',  __NAMESPACE__.'\blockInit');
 function blockInit(){
-	$result=register_post_meta( 
+	register_post_meta( 
         '', 
         'mailchimp_segment_ids', 
         [
@@ -49,7 +49,7 @@ function blockInit(){
             ],
             'single' 		    => false,
             'type' 			    => 'array',
-            'default'	        => 'test',
+            'default'	        => [],
             'single'            => true
         ]
     );
