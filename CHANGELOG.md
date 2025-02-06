@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- issue when campaign does not exist anymore
 
 ### Updated
 
