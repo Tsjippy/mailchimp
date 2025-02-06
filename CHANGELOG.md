@@ -2,16 +2,23 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- campaigns overview
-- campaign delete form
 
 ### Changed
 
 ### Fixed
-- tags display
-- block
 
 ### Updated
+
+## [8.1.4] - 2025-02-06
+
+
+### Added
+- campaigns overview
+- campaign delete form
+
+### Fixed
+- tags display
+- block
 
 ## [8.1.2] - 2025-02-04
 
