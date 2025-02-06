@@ -9,6 +9,7 @@
 
 ### Fixed
 - tags display
+- block
 
 ### Updated
 
