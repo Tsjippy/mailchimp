@@ -676,8 +676,24 @@ class Mailchimp{
 	 * @param	int		$id		The campaign Id.
 	 */
 	public function getCampaign($id){
-		/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
-		return $this->client->campaigns->get($id);
+		try{
+			/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
+			return $this->client->campaigns->get($id);
+		}
+		//catch exception
+		catch(\GuzzleHttp\Exception\ClientException $e){
+			$result			= json_decode($e->getResponse()->getBody()->getContents());
+			$errorResult	= $result->detail;
+			if(isset($result->errors)){
+				$errorResult	.= "<pre>".print_r($result->errors, true)."</pre>";
+			}
+			
+			return $errorResult;
+		}catch(\Exception $e) {
+			$errorResult = $e->getMessage();
+			SIM\printArray($errorResult);
+			return $errorResult;
+		}
 	}
 
 	/**
