@@ -8,6 +8,7 @@
 ### Changed
 
 ### Fixed
+- tags display
 
 ### Updated
 
