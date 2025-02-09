@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- issue when campaign does not exist anymore
 
 ### Updated
+
+## [8.1.5] - 2025-02-09
+
+
+### Fixed
+- issue when campaign does not exist anymore
 
 ## [8.1.4] - 2025-02-06
 
