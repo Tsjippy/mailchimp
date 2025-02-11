@@ -5,6 +5,7 @@
 
 ### Changed
 - sim_module_updated filter to new format
+- use site date and time format
 
 ### Fixed
 
