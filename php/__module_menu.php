@@ -149,7 +149,7 @@ function moduleData($dataHtml, $moduleSlug, $settings){
 				} ); 
 
 				foreach($members as $member){
-					$memberSince	= date('d-m-Y', strtotime($member->timestamp_opt));
+					$memberSince	= date(DATEFORMAT, strtotime($member->timestamp_opt));
 					$memberTags		= [];
 					$memberTagNames	= [];
 					foreach($member->tags as $tag){
@@ -228,7 +228,7 @@ function moduleData($dataHtml, $moduleSlug, $settings){
 
 				$title		= "<a href='$campaign->long_archive_url' target='_blank'>$title</a>";
 
-				$dateSent	= date('d-m-Y H:m', strtotime($campaign->send_time));
+				$dateSent	= date(DATEFORMAT.' '.TIMEFORMAT, strtotime($campaign->send_time));
 
 				$openRate	= round($campaign->report_summary->open_rate * 100 , 1).'%';
 
