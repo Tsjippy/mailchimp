@@ -258,13 +258,8 @@ function moduleData($dataHtml, $moduleSlug, $settings){
 	return $dataHtml;
 }
 
-add_filter('sim_module_updated', __NAMESPACE__.'\moduleUpdated', 10, 3);
-function moduleUpdated($newOptions, $moduleSlug, $oldOptions){
-	//module slug should be the same as grandparent folder name
-	if($moduleSlug != MODULE_SLUG){
-		return $newOptions;
-	}
-
+add_filter('sim_module_mailchimp_after_save', __NAMESPACE__.'\moduleUpdated');
+function moduleUpdated($newOptions){
 	scheduleTasks();
 
 	return $newOptions;
