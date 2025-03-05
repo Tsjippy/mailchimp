@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- bug in segment ids
 
 ### Updated
+
+## [8.1.8] - 2025-03-05
+
+
+### Fixed
+- bug in segment ids
 
 ## [8.1.7] - 2025-02-13
 
