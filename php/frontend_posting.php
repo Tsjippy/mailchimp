@@ -104,8 +104,17 @@ function afterContent($frontendContend){
 
 add_action('sim_after_post_save', __NAMESPACE__.'\afterPostSave');
 function afterPostSave($post){
+    if(!empty($_POST['mailchimp_segment_ids'])){
+        return;
+    }
+
 	//Mailchimp
-    $segmentIds = explode(",", $_POST['mailchimp_segment_ids']);
+    $segmentIds = $_POST['mailchimp_segment_ids'];
+
+    if(!is_array($segmentIds)){
+        $segmentIds = explode(",", $_POST['mailchimp_segment_ids']);
+    }
+
 	if(is_array($segmentIds) && !empty($segmentIds)){
         $extraMessage   = str_replace("\n", '<br>', sanitize_text_field($_POST['mailchimp-extra-message']));
         update_metadata( 'post', $post->ID, 'mailchimp_segment_ids', $segmentIds);
