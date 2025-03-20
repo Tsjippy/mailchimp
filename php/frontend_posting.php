@@ -104,7 +104,7 @@ function afterContent($frontendContend){
 
 add_action('sim_after_post_save', __NAMESPACE__.'\afterPostSave');
 function afterPostSave($post){
-    if(!empty($_POST['mailchimp_segment_ids'])){
+    if(empty($_POST['mailchimp_segment_ids'])){
         return;
     }
 
