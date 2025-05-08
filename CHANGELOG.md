@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- send mainchimp
 
 ### Updated
+
+## [8.1.9] - 2025-05-08
+
+
+### Fixed
+- send mainchimp
 
 ## [8.1.8] - 2025-03-05
 
