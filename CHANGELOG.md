@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- missing brackets in name
 
 ### Updated
 
