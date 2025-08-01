@@ -537,7 +537,7 @@ class Mailchimp{
 
 			//Send the campain
 			/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
-			$sendResult = $this->client->campaigns->send($campainId);
+			$this->client->campaigns->send($campainId);
 
 			// Indicate as send
 			update_metadata( 'post', $postId, 'mailchimp_message_send', $segmentId);

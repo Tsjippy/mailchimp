@@ -64,7 +64,7 @@ function afterContent($frontendContend){
                 }
             }
         </script>
-        <select name='mailchimp_segment_ids' onchange="showMailChimp(this)" multiple='multiple'>
+        <select name='mailchimp_segment_ids[]' onchange="showMailChimp(this)" multiple='multiple'>
             <option value="">---</option>
             <?php
             foreach($segments as $segment){
@@ -161,8 +161,6 @@ function asyncMailchimpCampaign($postId){
 
     // Indicate as send
     if(!empty($segmentIdsSent)){
-        update_metadata( 'post', $postId, 'mailchimp_message_send', $segmentIds);
-
         //delete any post metakey
         delete_post_meta($postId, 'mailchimp_segment_ids');
         delete_post_meta($postId, 'mailchimp_email');
