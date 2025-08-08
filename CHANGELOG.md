@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- missing brackets in name
 
 ### Updated
+
+## [8.2.0] - 2025-08-08
+
+
+### Fixed
+- missing brackets in name
 
 ## [8.1.9] - 2025-05-08
 
