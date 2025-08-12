@@ -2,14 +2,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- error message when nor from address set
 
 ### Changed
-- show all mailchimp fields if mailchimp id is set
 
 ### Fixed
 
 ### Updated
+
+## [8.2.1] - 2025-08-12
+
+
+### Added
+- error message when nor from address set
+
+### Changed
+- show all mailchimp fields if mailchimp id is set
 
 ## [8.2.0] - 2025-08-08
 
