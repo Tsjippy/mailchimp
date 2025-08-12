@@ -5,6 +5,7 @@
 - error message when nor from address set
 
 ### Changed
+- show all mailchimp fields if mailchimp id is set
 
 ### Fixed
 
