@@ -30,23 +30,27 @@ function afterContent($frontendContend){
     if(!$segments){
         return;
     }
+    
+    // If the post is already send to a segment, show that segment
+    $sendSegment    = $frontendContend->getPostMeta('mailchimp_message_send');
+    if(is_numeric($sendSegment)){
+        $sendSegment    = [$sendSegment];
+    }
+
+    if(is_array($sendSegment)){
+        foreach($segments as $segment){
+            if($sendSegment[0] == $segment->id){
+                $sendSegment    = $segment->name;
+                break;
+            }
+        }
+    }
 
     ?>
     <div id="mailchimp" class="frontendform">
         <h4>Send <span class="replaceposttype"><?php echo $frontendContend->postType;?></span> contents to the following Mailchimp segement(s) on <?php echo $frontendContend->update == 'true' ? 'update' : 'publish';?>:</h4>
         <?php
-        $sendSegment    = $frontendContend->getPostMeta('mailchimp_message_send');
-        if(is_numeric($sendSegment)){
-            $sendSegment    = [$sendSegment];
-        }
-
-        if(is_array($sendSegment)){
-            foreach($segments as $segment){
-                if($sendSegment[0] == $segment->id){
-                    $sendSegment    = $segment->name;
-                }
-            }
-
+        if(!empty($sendSegment)){
             ?>
             <div class='warning' style='width: fit-content;'>
                 An e-mail has already been send to the <?php echo $sendSegment;?> group.
@@ -55,7 +59,6 @@ function afterContent($frontendContend){
         }
         ?>
         <script>
-            console.log('showMailChimp');
             function showMailChimp(el){
                 if(el.value == ''){
                     el.closest('div').querySelectorAll('.mailchimp-wrapper').forEach(el => el.classList.add('hidden'));
@@ -81,7 +84,7 @@ function afterContent($frontendContend){
             ?>
         </select>
 
-        <div class='mailchimp-wrapper hidden'>
+        <div class='mailchimp-wrapper <?php if(!is_array($mailchimpSegmentIds)){echo 'hidden';}?>' >
             <h4>Use this from e-mail address</h4>
             <input type='text' name='mailchimp_email' list='emails' value='<?php echo $mailchimpEmail;?>'>
             <datalist id='emails'>
@@ -94,9 +97,7 @@ function afterContent($frontendContend){
             </datalist>
 
             <h4>Prepend the e-mail with this message:</h4>
-            <textarea name='mailchimp-extra-message'><?php
-                echo $mailchimpExtraMessage;
-            ?></textarea>
+            <textarea name='mailchimp-extra-message'><?php echo $mailchimpExtraMessage;?></textarea>
         </div>
     </div>
     <?php
