@@ -140,10 +140,15 @@ function asyncMailchimpCampaign($postId){
     $from           = get_post_meta($postId, 'mailchimp_email', true);
     $extraMessage   = get_post_meta($postId, 'mailchimp_extra_message', true);
 
-    if(empty($segmentIds) || empty($from)){
+    if(empty($segmentIds)){
         return;
     }
 
+    if(empty($from)){
+        SIM\printArray('No from e-mail address set for Mailchimp campaign', 'error');
+        return;
+    }
+    
     //Send mailchimp message
     $Mailchimp  = new Mailchimp();
     $segmentIdsSent  = [];
