@@ -524,7 +524,11 @@ class Mailchimp{
 
 			$mailContent		= apply_filters('sim_before_mailchimp_send', $mailContent, $post);
 
+			// Insert the mail content in the template
 			$mailContent 		= str_replace('%content%', $mailContent, $template, $count);
+
+			// Replace the ARCHIVE keyword with the post url
+			$mailContent 		= str_replace('*|ARCHIVE|*', get_permalink($postId), $mailContent);
 
 			//Push the new content
 			/** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
