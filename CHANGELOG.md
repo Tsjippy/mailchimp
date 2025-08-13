@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- redirect *|ARCHIVE|* keyword to post url
 
 ### Fixed
 
