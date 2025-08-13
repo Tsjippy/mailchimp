@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [8.2.2] - 2025-08-13
+
+
+### Changed
 - redirect *|ARCHIVE|* keyword to post url
 
 ### Fixed
 - multiple campaign ids per post
-
-### Updated
 
 ## [8.2.1] - 2025-08-12
 
