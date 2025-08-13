@@ -48,7 +48,7 @@ function addMailchimpCampaigns(){
                 array(
                     'key'	 	=> 'mailchimp_campaign_id',
                     'value' 	=> $campaign->id, 
-                    'compare' 	=> '='
+                    'compare' 	=> '=' 
                 ),
             )
         ));
@@ -71,7 +71,7 @@ function addMailchimpCampaigns(){
                 set_post_thumbnail( $postId, $pictures['imageId']);
             }
 
-            update_post_meta($postId, 'mailchimp_campaign_id', $campaign->id);
+            add_post_meta($postId, 'mailchimp_campaign_id', $campaign->id);
         }
     }
 }
