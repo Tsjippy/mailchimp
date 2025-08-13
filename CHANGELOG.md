@@ -7,6 +7,7 @@
 - redirect *|ARCHIVE|* keyword to post url
 
 ### Fixed
+- multiple campaign ids per post
 
 ### Updated
 
