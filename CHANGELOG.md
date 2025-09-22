@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- mailchimp campaign in iframe
 
 ### Fixed
 
