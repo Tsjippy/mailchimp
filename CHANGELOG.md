@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- mailchimp campaign in iframe
 
 ### Fixed
 
 ### Updated
+
+## [8.2.3] - 2025-09-22
+
+
+### Changed
+- mailchimp campaign in iframe
 
 ## [8.2.2] - 2025-08-13
 
