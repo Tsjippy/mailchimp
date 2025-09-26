@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- issue with unnecesary mailchimp post creation
 
 ### Updated
 
