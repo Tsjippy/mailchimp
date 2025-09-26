@@ -39,6 +39,7 @@ function addMailchimpCampaigns(){
         $posts = get_posts(array(
             'numberposts'   => -1,
             'post_status'   => 'any',
+            'post_type'     => 'any',
             'meta_query' 	=> array(
                 'relation' 		=> 'AND',
                 array(
