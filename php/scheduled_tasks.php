@@ -26,7 +26,7 @@ function addMailchimpCampaigns(){
     // get all mailchimp campaigns created yesterday
     $result		= $mailchimp->getCampaigns(date("Y-m-d", strtotime('-1 day')).'T00:00:00+00:00');
 
-    $pictures	= SIM\getModuleOption(MODULE_SLUG, 'picture_ids');
+    $pictures	= SIM\getModuleOption(MODULE_SLUG, 'picture-ids');
 
     $post = array(
         'post_type'		=> 'post',
@@ -56,10 +56,10 @@ function addMailchimpCampaigns(){
 
         // do not add mailchimp campaigns created by the website
         if( empty($posts) ){
-            $post['post_title']		= $campaign->settings->title;
-            if(empty($post['post_title']	)){
+            $post['post-title']		= $campaign->settings->title;
+            if(empty($post['post-title']	)){
                 if(!empty($campaign->settings->subject_line)){
-                    $post['post_title']	= $campaign->settings->subject_line;
+                    $post['post-title']	= $campaign->settings->subject_line;
                 }else{
                     continue;
                 }

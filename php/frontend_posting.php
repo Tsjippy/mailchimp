@@ -47,7 +47,7 @@ function afterContent($frontendContend){
     }
 
     ?>
-    <div id="mailchimp" class="frontendform">
+    <div id="mailchimp" class="frontend-form">
         <h4>Send <span class="replaceposttype"><?php echo $frontendContend->postType;?></span> contents to the following Mailchimp segement(s) on <?php echo $frontendContend->update == 'true' ? 'update' : 'publish';?>:</h4>
         <?php
         if(!empty($sendSegment)){
@@ -67,7 +67,7 @@ function afterContent($frontendContend){
                 }
             }
         </script>
-        <select name='mailchimp_segment_ids[]' onchange="showMailChimp(this)" multiple='multiple'>
+        <select name='mailchimp-segment-ids[]' onchange="showMailChimp(this)" multiple='multiple'>
             <option value="">---</option>
             <?php
             foreach($segments as $segment){
@@ -86,7 +86,7 @@ function afterContent($frontendContend){
 
         <div class='mailchimp-wrapper <?php if(!is_array($mailchimpSegmentIds)){echo 'hidden';}?>' >
             <h4>Use this from e-mail address</h4>
-            <input type='text' name='mailchimp_email' list='emails' value='<?php echo $mailchimpEmail;?>'>
+            <input type='text' name='mailchimp-email' list='emails' value='<?php echo $mailchimpEmail;?>'>
             <datalist id='emails'>
                 <?php
                 $emails = apply_filters('sim-mailchimp-from', []);
@@ -105,21 +105,21 @@ function afterContent($frontendContend){
 
 add_action('sim_after_post_save', __NAMESPACE__.'\afterPostSave');
 function afterPostSave($post){
-    if(empty($_POST['mailchimp_segment_ids'])){
+    if(empty($_POST['mailchimp-segment-ids'])){
         return;
     }
 
 	//Mailchimp
-    $segmentIds = $_POST['mailchimp_segment_ids'];
+    $segmentIds = $_POST['mailchimp-segment-ids'];
 
     if(!is_array($segmentIds)){
-        $segmentIds = explode(",", $_POST['mailchimp_segment_ids']);
+        $segmentIds = explode(",", $_POST['mailchimp-segment-ids']);
     }
 
 	if(is_array($segmentIds) && !empty($segmentIds)){
         $extraMessage   = str_replace("\n", '<br>', sanitize_text_field($_POST['mailchimp-extra-message']));
         update_metadata( 'post', $post->ID, 'mailchimp_segment_ids', $segmentIds);
-        update_metadata( 'post', $post->ID, 'mailchimp_email', $_POST['mailchimp_email']);
+        update_metadata( 'post', $post->ID, 'mailchimp_email', $_POST['mailchimp-email']);
         update_metadata( 'post', $post->ID, 'mailchimp_extra_message', $extraMessage);
     }else{
         delete_metadata( 'post', $post->ID, 'mailchimp_segment_ids');

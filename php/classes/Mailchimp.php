@@ -111,9 +111,9 @@ class Mailchimp{
 
 			$confidentialGroups	= (array)SIM\getModuleOption('contentfilter', 'confidential-roles');
 			if(array_intersect($confidentialGroups, $roles)){
-				$tags = explode(',', $this->settings['user_tags']);
+				$tags = explode(',', $this->settings['user-tags']);
 			}else{
-				$tags = array_merge(explode(',', $this->settings['user_tags']), explode(',', $this->settings['missionary_tags']));
+				$tags = array_merge(explode(',', $this->settings['user-tags']), explode(',', $this->settings['missionary-tags']));
 			}
 
 			$this->changeTags($tags, 'active');

@@ -21,13 +21,13 @@ function restApiInit() {
 		array(
 			'methods' 				=> \WP_REST_Server::CREATABLE,
 			'callback' 				=> function(){
-				update_post_meta($_REQUEST['postid'], 'mailchimp_height', $_REQUEST['height']);
+				update_post_meta($_REQUEST['post-id'], 'mailchimp_height', $_REQUEST['height']);
 
 				return true;
 			},
 			'permission_callback' 	=> '__return_true',
 			'args'					=> array(
-				'postid'		=> array(
+				'post-id'		=> array(
 					'required'	=> true,
 					'validate_callback' => function($postid){
 						return is_numeric($postid);

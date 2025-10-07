@@ -29,7 +29,7 @@ function mailchimpCode($atts){
 		$html	.= "<script>
 			document.addEventListener('DOMContentLoaded', e => {
 				let formData = new FormData();
-				formData.append('postid', $post->ID);
+				formData.append('post-id', $post->ID);
 				formData.append('height', document.querySelector('.mailchimp-wrapper').offsetHeight);
 				FormSubmit.fetchRestApi('mailchimp/store_height', formData);
 			});

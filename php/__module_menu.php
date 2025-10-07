@@ -48,7 +48,7 @@ function moduleOptions($optionsHtml, $settings){
 		<br>
 		<label>
 			Mailchimp TAGs you want to add to new users<br>
-			<input type="text" name="user_tags" value="<?php echo $settings["user_tags"]; ?>">
+			<input type="text" name="user-tags" value="<?php echo $settings["user-tags"]; ?>">
 		</label>
 		<br>
 		<br>
@@ -106,7 +106,7 @@ function moduleData($html){
 	
 	$lists 	= (array)$mailchimp->getLists();
 
-	$tab	= $_GET['second_tab'];
+	$tab	= $_GET['second-tab'];
 
 	?>
 	<div class='tablink-wrapper'>
