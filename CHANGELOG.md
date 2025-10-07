@@ -8,6 +8,7 @@
 
 ### Fixed
 - issue with unnecesary mailchimp post creation
+- bugs
 
 ### Updated
 
