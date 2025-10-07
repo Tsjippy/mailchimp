@@ -110,8 +110,8 @@ function moduleData($html){
 
 	?>
 	<div class='tablink-wrapper'>
-		<button class="tablink <?php if(empty($tab) || $tab == 'audience'){echo 'active';}?>" id="show_audience" data-target="audience" >Audiences</button>
-		<button class="tablink <?php if($tab == 'campaigns'){echo 'active';}?>" id="show_campaigns" data-target="campaigns">Campaigns</button>
+		<button class="tablink <?php if(empty($tab) || $tab == 'audience'){echo 'active';}?>" id="show-audience" data-target="audience" >Audiences</button>
+		<button class="tablink <?php if($tab == 'campaigns'){echo 'active';}?>" id="show-campaigns" data-target="campaigns">Campaigns</button>
 	</div>	
 	
 	<div class='tabcontent <?php if(!empty($tab) && $tab != 'audience'){echo 'hidden';}?>' id='audience'>
