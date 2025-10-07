@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- classnames
 
 ### Fixed
 - issue with unnecesary mailchimp post creation
