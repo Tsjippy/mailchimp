@@ -48,7 +48,7 @@ function afterContent($frontendContend){
 
     ?>
     <div id="mailchimp" class="frontend-form">
-        <h4>Send <span class="replaceposttype"><?php echo $frontendContend->postType;?></span> contents to the following Mailchimp segement(s) on <?php echo $frontendContend->update == 'true' ? 'update' : 'publish';?>:</h4>
+        <h4>Send <span class="replace-post-type"><?php echo $frontendContend->postType;?></span> contents to the following Mailchimp segement(s) on <?php echo $frontendContend->update ? 'update' : 'publish';?>:</h4>
         <?php
         if(!empty($sendSegment)){
             ?>
