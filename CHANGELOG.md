@@ -4,13 +4,20 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [8.2.4] - 2025-10-13
+
+
+### Changed
 - classnames
 
 ### Fixed
 - issue with unnecesary mailchimp post creation
 - bugs
-
-### Updated
 
 ## [8.2.3] - 2025-09-22
 
