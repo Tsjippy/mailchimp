@@ -230,8 +230,8 @@ function moduleData($html){
 					?>
 					<td>
 						<form method='POST'>
-							<input type='hidden' name='delete-campaign'	value='<?php echo $campaign->id;?>'>
-							<input type='hidden' name='nonce' value='<?php echo $nonce;?>'>
+							<input type='hidden' class='no-reset' name='delete-campaign'	value='<?php echo $campaign->id;?>'>
+							<input type='hidden' class='no-reset' name='nonce' value='<?php echo $nonce;?>'>
 							<button type='submit'>Delete</button>
 						</form>
 					</td>
