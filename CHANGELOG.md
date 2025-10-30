@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- use new family class
 
 ### Fixed
 
 ### Updated
+
+## [8.2.5] - 2025-10-30
+
+
+### Changed
+- use new family class
 
 ## [8.2.4] - 2025-10-13
 
