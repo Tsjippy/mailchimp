@@ -665,10 +665,12 @@ class Mailchimp{
 		$this->changeTags($this->user->ID, $tags, $status);
 
 		//Update the meta key for all family members as well
-		$family = SIM\familyFlatArray($this->user->ID);
-		if (count($family)>0){
-			foreach($family as $relative){
-				//Update the marker for the relative as well
+		$family 		= new SIM\FAMILY\Family();
+		$familyMembers	= $family->getFamily($this->user, true);
+
+		if (count($familyMembers) > 0){
+			foreach($familyMembers as $relative){
+				//Update the tag for the relative as well
 				$this->changeTags($relative, $tags, $status);
 			}
 		}
