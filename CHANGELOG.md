@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- use new family class
 
 ### Fixed
 
