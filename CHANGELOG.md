@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- clearer data attributes
 
 ### Fixed
 
 ### Updated
+
+## [8.2.6] - 2025-11-04
+
+
+### Changed
+- clearer data attributes
 
 ## [8.2.5] - 2025-10-30
 
