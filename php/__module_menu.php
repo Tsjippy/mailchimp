@@ -222,7 +222,7 @@ function moduleData($html){
 
 				$openRate	= round($campaign->report_summary->open_rate * 100 , 1).'%';
 
-				echo "<tr data-id='$campaign->id'>";
+				echo "<tr data-campaign-id='$campaign->id'>";
 					echo "<td>$title</td>";
 					echo "<td>{$campaign->recipients->segment_text}</td>";
 					echo "<td>$dateSent</td>";
