@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- composer updated
 
 ### Fixed
 
