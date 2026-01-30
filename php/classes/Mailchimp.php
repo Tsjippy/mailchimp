@@ -513,7 +513,7 @@ class Mailchimp{
 			$campainId 			= $createResult->id;
 
 			// Get the rendered mail content
-			$mailContent 		= apply_filters( 'the_content', get_the_content(null, false, $postId));
+			$mailContent 		= apply_filters( 'the_content', get_the_content(null, false, $postId), 'mailchimp');
 
 			//Update the html
 			$mailContent		= $extraMessage.'<br>'.$this->removeGreeting($mailContent ).$finalMessage;
