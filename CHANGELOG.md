@@ -2,14 +2,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- mailchimp indicator to the content hook
 
 ### Changed
-- composer updated
 
 ### Fixed
 
 ### Updated
+
+## [8.2.8] - 2026-01-30
+
+
+### Added
+- mailchimp indicator to the content hook
+
+### Changed
+- composer updated
 
 ## [8.2.7] - 2025-11-21
 
