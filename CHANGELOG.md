@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- mailchimp indicator to the content hook
 
 ### Changed
 - composer updated
