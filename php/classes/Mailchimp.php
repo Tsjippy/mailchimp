@@ -100,7 +100,7 @@ class Mailchimp{
 		}
 
 		//Only do if valid e-mail
-		elseif(!empty($this->user->user_email) && !str_contains($this->user->user_email,'.empty') && $_SERVER['HTTP_HOST'] != 'localhost' && !str_contains($_SERVER['HTTP_HOST'], '.local')){
+		elseif(!empty($this->user->user_email) && !str_contains($this->user->user_email,'.empty') && wp_get_environment_type() !== 'local'){
 			SIM\printArray("Adding '{$this->user->user_email}' to Mailchimp");
 
 			//First add to the audience
@@ -458,7 +458,7 @@ class Mailchimp{
 	 */
 	public function sendEmail(int $postId, int $segmentId, $from='', $extraMessage='', $full=true, $finalMessage=''){
 		try {
-			if($_SERVER['HTTP_HOST'] == 'localhost' || get_option("wpstg_is_staging_site") == "true" || str_contains($_SERVER['HTTP_HOST'], '.local')){
+			if(wp_get_environment_type() === 'local' || get_option("wpstg_is_staging_site") == "true"){
 				return 'Not sending from localhost';
 			}
 
