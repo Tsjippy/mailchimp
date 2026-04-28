@@ -1,8 +1,12 @@
 <?php
-namespace SIM\MAILCHIMP;
-use SIM;
+namespace TSJIPPY\MAILCHIMP;
+use TSJIPPY;
 
-add_action('sim_frontend_post_before_content', __NAMESPACE__.'\beforeContent');
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+add_action('tsjippy_frontend_post_before_content', __NAMESPACE__.'\beforeContent');
 function beforeContent($object){
     // check for mailchim audience id shortcode
     if(!preg_match('/\[mailchimp id=\'(.*?)\'\]/',$object->postContent, $matches)){
@@ -19,7 +23,7 @@ function beforeContent($object){
 }
 
 // add the mailchimp fields to the content creation form
-add_action('sim_frontend_post_after_content', __NAMESPACE__.'\afterContent');
+add_action('tsjippy_frontend_post_after_content', __NAMESPACE__.'\afterContent');
 function afterContent($frontendContend){
     $mailchimpSegmentIds    = $frontendContend->getPostMeta('mailchimp_segment_ids');
     $mailchimpEmail		    = $frontendContend->getPostMeta('mailchimp_email');
@@ -89,7 +93,7 @@ function afterContent($frontendContend){
             <input type='text' name='mailchimp-email' list='emails' value='<?php echo $mailchimpEmail;?>'>
             <datalist id='emails'>
                 <?php
-                $emails = apply_filters('sim-mailchimp-from', []);
+                $emails = apply_filters('tsjippy-mailchimp-from', []);
                 foreach($emails as $email=>$text){
                     echo "<option value='$email'>$text</option>";
                 }
@@ -103,7 +107,7 @@ function afterContent($frontendContend){
     <?php
 }
 
-add_action('sim_after_post_save', __NAMESPACE__.'\afterPostSave');
+add_action('tsjippy_after_post_save', __NAMESPACE__.'\afterPostSave');
 function afterPostSave($post){
     if(empty($_POST['mailchimp-segment-ids'])){
         return;
@@ -146,7 +150,7 @@ function asyncMailchimpCampaign($postId){
     }
 
     if(empty($from)){
-        SIM\printArray('No from e-mail address set for Mailchimp campaign', 'error');
+        TSJIPPY\printArray('No from e-mail address set for Mailchimp campaign', 'error');
         return;
     }
     

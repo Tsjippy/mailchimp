@@ -1,6 +1,10 @@
 <?php
-namespace SIM\MAILCHIMP;
-use SIM;
+namespace TSJIPPY\MAILCHIMP;
+use TSJIPPY;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 // shows a mailchimp campaign on the page
 add_shortcode("mailchimp", __NAMESPACE__.'\mailchimpCode');

@@ -1,15 +1,15 @@
 <?php
-namespace SIM\MAILCHIMP;
-use SIM;
+namespace TSJIPPY\MAILCHIMP;
+use TSJIPPY;
 
 // Load the js file to filter all blocks
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__.'\blockAssets');
 function blockAssets() {
     wp_enqueue_script(
-        'sim-mailchimp-block',
-        SIM\pathToUrl(MODULE_PATH.'blocks/mailchimp_options/build/index.js'),
+        'tsjippy-mailchimp-block',
+        TSJIPPY\pathToUrl(PLUGINPATH.'blocks/mailchimp_options/build/index.js'),
         [ 'wp-blocks', 'wp-dom', 'wp-dom-ready', 'wp-edit-post' ],
-        MODULE_VERSION
+        PLUGINVERSION
     );
 
     $mailchimp  = new Mailchimp();
@@ -26,7 +26,7 @@ function blockAssets() {
     }, $segments);
 
     wp_localize_script(
-        'sim-mailchimp-block',
+        'tsjippy-mailchimp-block',
         'mailchimp',
         $segments
     );

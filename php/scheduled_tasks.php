@@ -1,6 +1,10 @@
 <?php
-namespace SIM\MAILCHIMP;
-use SIM;
+namespace TSJIPPY\MAILCHIMP;
+use TSJIPPY;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 add_action('init', function(){
 	//add action for use in scheduled task
@@ -10,12 +14,8 @@ add_action('init', function(){
     add_action( 'schedule_mailchimp_campaign', __NAMESPACE__.'\asyncMailchimpCampaign');
 });
 
-function scheduleTasks(){
-    SIM\scheduleTask('add_mailchimp_campaigns_action', 'daily');
-}
-
 // Remove scheduled tasks upon module deactivation
-add_action('sim_module_mailchimp_deactivated', function(){
+add_action('tsjippy_module_mailchimp_deactivated', function(){
 	wp_clear_scheduled_hook( 'add_mailchimp_campaigns_action' );
 }, 10, 2);
 
@@ -26,7 +26,7 @@ function addMailchimpCampaigns(){
     // get all mailchimp campaigns created yesterday
     $result		= $mailchimp->getCampaigns(date("Y-m-d", strtotime('-1 day')).'T00:00:00+00:00');
 
-    $pictures	= SIM\getModuleOption(MODULE_SLUG, 'picture-ids');
+    $pictures	= SETTINGS['picture-ids'] ?? false;
 
     $post = array(
         'post_type'		=> 'post',

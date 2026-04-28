@@ -1,11 +1,15 @@
 <?php
-namespace SIM\MAILCHIMP;
-use SIM;
+namespace TSJIPPY\MAILCHIMP;
+use TSJIPPY;
 use stdClass;
 use WP_Error;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // Allow rest api urls for non-logged in users
-add_filter('sim_allowed_rest_api_urls', __NAMESPACE__.'\addFormResultUrls');
+add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__.'\addFormResultUrls');
 function addFormResultUrls($urls){
     $urls[] = RESTAPIPREFIX.'/forms/edit_value';
 

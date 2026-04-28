@@ -1,11 +1,15 @@
 <?php
-namespace SIM\MAILCHIMP;
-use SIM;
+namespace TSJIPPY\MAILCHIMP;
+use TSJIPPY;
 use WP_Error;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 //https://mailchimp.com/developer/marketing
 
-require_once( MODULE_PATH  . 'lib/vendor/autoload.php');
+require_once( PLUGINPATH  . 'lib/vendor/autoload.php');
 
 if(class_exists(__NAMESPACE__.'\Mailchimp')){
 	return;
@@ -20,9 +24,7 @@ class Mailchimp{
 	public $client;
 
 	public function __construct($userId=''){
-		global $Modules;
-
-		$this->settings		= $Modules[MODULE_SLUG];
+		$this->settings		= SETTINGS;
 
 		if(is_numeric($userId)){
 			$this->user			= get_userdata($userId);
@@ -101,7 +103,7 @@ class Mailchimp{
 
 		//Only do if valid e-mail
 		elseif(!empty($this->user->user_email) && !str_contains($this->user->user_email,'.empty') && wp_get_environment_type() !== 'local'){
-			SIM\printArray("Adding '{$this->user->user_email}' to Mailchimp");
+			TSJIPPY\printArray("Adding '{$this->user->user_email}' to Mailchimp");
 
 			//First add to the audience
 			$this->subscribeMember($this->buildMergeTags());
@@ -109,7 +111,7 @@ class Mailchimp{
 			//Build tag list
 			$roles = $this->user->roles;
 
-			$confidentialGroups	= (array)SIM\getModuleOption('contentfilter', 'confidential-roles');
+			$confidentialGroups	= TSJIPPY\CONTENTFILTER\SETTINGS['confidential-roles'] ?? [];
 			if(array_intersect($confidentialGroups, $roles)){
 				$tags = explode(',', $this->settings['user-tags']);
 			}else{
@@ -145,10 +147,10 @@ class Mailchimp{
 
 					//Subscription succesfull
 					if( $response){
-						SIM\printArray("Succesfully added the $tag tag to {$this->user->display_name}");
+						TSJIPPY\printArray("Succesfully added the $tag tag to {$this->user->display_name}");
 					//Subscription failed
 					}else{
-						SIM\printArray("Tag $tag  was not added to user wih email {$this->user->user_mail}} because: $response" );
+						TSJIPPY\printArray("Tag $tag  was not added to user wih email {$this->user->user_mail}} because: $response" );
 					}
 
 					//Store result
@@ -159,11 +161,11 @@ class Mailchimp{
 
 					//Unsubscription succesfull
 					if( $response){
-						SIM\printArray("Succesfully removed the $tag tag from {$this->user->display_name}");
+						TSJIPPY\printArray("Succesfully removed the $tag tag from {$this->user->display_name}");
 						unset($this->mailchimpStatus[$tag]);
 					//Subscription failed
 					}else{
-						SIM\printArray("Tag $tag  was not removed from user {$this->user->display_name} because: $response" );
+						TSJIPPY\printArray("Tag $tag  was not removed from user {$this->user->display_name} because: $response" );
 					}
 				}
 			}
@@ -189,12 +191,14 @@ class Mailchimp{
 		catch(\GuzzleHttp\Exception\ClientException $e){
 			$result			= json_decode($e->getResponse()->getBody()->getContents());
 			$errorResult	= $result->detail."<pre>".print_r($result->errors,true)."</pre>";
-			SIM\printArray($errorResult);
+			TSJIPPY\printArray($errorResult);
 			return $errorResult;
 		}catch(\Exception $e) {
 			$errorResult = $e->getMessage();
-			SIM\printArray($errorResult);
-			return $errorResult;
+
+			TSJIPPY\printArray($errorResult);
+
+			return new WP_ERROR('Tsjippy-Mailchimp', $errorResult);
 		}
 	}
 
@@ -237,11 +241,11 @@ class Mailchimp{
 		}catch(\GuzzleHttp\Exception\ClientException $e){
 			$result = json_decode($e->getResponse()->getBody()->getContents());
 			$errorResult = $result->detail."<pre>".print_r($result->errors,true)."</pre>";
-			SIM\printArray($errorResult);
+			TSJIPPY\printArray($errorResult);
 			return $errorResult;
 		}catch(\Exception $e) {
 			$errorResult = $e->getMessage();
-			SIM\printArray($errorResult);
+			TSJIPPY\printArray($errorResult);
 			return $errorResult;
 		}
 	}
@@ -281,11 +285,11 @@ class Mailchimp{
 			}
 
 			$errorResult = $result->detail."<pre>".print_r($result->errors,true)."</pre>";
-			SIM\printArray($errorResult);
+			TSJIPPY\printArray($errorResult);
 			return new WP_Error('mailchimp', $errorResult);
 		}catch(\Exception $e) {
 			$errorResult = $e->getMessage();
-			SIM\printArray($errorResult);
+			TSJIPPY\printArray($errorResult);
 			return new WP_Error('mailchimp', $errorResult);
 		}
 	}
@@ -360,7 +364,7 @@ class Mailchimp{
 						// Create image instances
 						$dest		= imagecreatefromjpeg($thumbnailUrl);
 						if(!$dest){
-							SIM\printArray("Creating image failed for $thumbnailUrl");
+							TSJIPPY\printArray("Creating image failed for $thumbnailUrl");
 
 							return false;
 						}
@@ -368,9 +372,9 @@ class Mailchimp{
 						$width  	= imagesx($dest);
 						$height 	= imagesy($dest);
 
-						$src		= imagecreatefrompng(ABSPATH."wp-content/sim-modules/mailchimp/pictures/play-mq.png");
+						$src		= imagecreatefrompng(WP_PLUGIN_DIR."/tsjippy-mailchimp/pictures/play-mq.png");
 						if(!$src){
-							SIM\printArray("Creating image failed for ".ABSPATH."wp-content/sim-modules/mailchimp/pictures/play-mq.png");
+							TSJIPPY\printArray("Creating image failed for ".WP_PLUGIN_DIR."/tsjippy-mailchimp/pictures/play-mq.png");
 
 							return false;
 						}
@@ -382,11 +386,11 @@ class Mailchimp{
 						imagecopy($dest, $src, ($width - $srcWidth)/2, ($height - $srcHeight) / 2, 0, 0, $srcWidth, $srcHeight);
 						
 						// Output and free from memory
-						$path			= ABSPATH."wp-content/sim-modules/mailchimp/pictures/$postId.jpg";
+						$path			= WP_PLUGIN_DIR."/tsjippy-mailchimp/pictures/$postId.jpg";
 
 						imagejpeg($dest, $path);
 
-						$thumbnailUrl	= SIM\pathToUrl($path);
+						$thumbnailUrl	= TSJIPPY\pathToUrl($path);
 						
 						imagedestroy($dest);
 						imagedestroy($src);
@@ -501,11 +505,11 @@ class Mailchimp{
 			}catch(\GuzzleHttp\Exception\ClientException $e){
 				$result = json_decode($e->getResponse()->getBody()->getContents());
 				$errorResult = $result->detail."<pre>".print_r($result->errors,true)."</pre>";
-				SIM\printArray($errorResult);
+				TSJIPPY\printArray($errorResult);
 				return $errorResult;
 			}catch(\Exception $e) {
 				$errorResult = $e->getMessage();
-				SIM\printArray($errorResult);
+				TSJIPPY\printArray($errorResult);
 				return $errorResult;
 			}
 
@@ -520,9 +524,9 @@ class Mailchimp{
 
 			$mailContent		= $this->processLinks($mailContent, $postId);
 
-			$template			= SIM\getModuleOption(MODULE_SLUG, 'mailchimp_html');
+			$template			= SETTINGS['mailchimp_html'] ?? false;
 
-			$mailContent		= apply_filters('sim_before_mailchimp_send', $mailContent, $post);
+			$mailContent		= apply_filters('tsjippy_before_mailchimp_send', $mailContent, $post);
 
 			// Insert the mail content in the template
 			$mailContent 		= str_replace('%content%', $mailContent, $template, $count);
@@ -549,7 +553,7 @@ class Mailchimp{
 			// Store campaign id
 			add_metadata( 'post', $postId, 'mailchimp_campaign_id', $campainId);
 
-			//SIM\printArray("Mailchimp campain send succesfully");
+			//TSJIPPY\printArray("Mailchimp campain send succesfully");
 			return 'succes';
 		}
 
@@ -557,11 +561,11 @@ class Mailchimp{
 		catch(\GuzzleHttp\Exception\ClientException $e){
 			$result = json_decode($e->getResponse()->getBody()->getContents());
 			$errorResult = $result->detail."<pre>".print_r($result->errors,true)."</pre>";
-			SIM\printArray($errorResult);
+			TSJIPPY\printArray($errorResult);
 			return $errorResult;
 		}catch(\Exception $e) {
 			$errorResult = $e->getMessage();
-			SIM\printArray($errorResult);
+			TSJIPPY\printArray($errorResult);
 			return $errorResult;
 		}
 	}
@@ -576,7 +580,7 @@ class Mailchimp{
 	public function getSegments($type='saved'){
 		if(empty($this->settings['audienceids'][0])){
 			$error	= 'No Audience defined in mailchimp module settings';
-			SIM\printArray($error);
+			TSJIPPY\printArray($error);
 			return new \WP_Error('mailchimp', $error);
 		}
 
@@ -616,7 +620,7 @@ class Mailchimp{
 			return $result->detail."<pre>".print_r($result->errors,true)."</pre>";
 		}catch(\Exception $e) {
 			$errorResult = $e->getMessage();
-			SIM\printArray($errorResult);
+			TSJIPPY\printArray($errorResult);
 			return $errorResult;
 		}
 	}
@@ -647,11 +651,11 @@ class Mailchimp{
 		catch(\GuzzleHttp\Exception\ClientException $e){
 			$result = json_decode($e->getResponse()->getBody()->getContents());
 			$errorResult = $result->detail."<pre>".print_r($result->errors,true)."</pre>";
-			SIM\printArray($errorResult);
+			TSJIPPY\printArray($errorResult);
 			return $errorResult;
 		}catch(\Exception $e) {
 			$errorResult = $e->getMessage();
-			SIM\printArray($errorResult);
+			TSJIPPY\printArray($errorResult);
 			return $errorResult;
 		}
 	}
@@ -665,7 +669,7 @@ class Mailchimp{
 		$this->changeTags($this->user->ID, $tags, $status);
 
 		//Update the meta key for all family members as well
-		$family 		= new SIM\FAMILY\Family();
+		$family 		= new TSJIPPY\FAMILY\Family();
 		$familyMembers	= $family->getFamily($this->user, true);
 
 		if (count($familyMembers) > 0){
@@ -697,7 +701,7 @@ class Mailchimp{
 			return $errorResult;
 		}catch(\Exception $e) {
 			$errorResult = $e->getMessage();
-			SIM\printArray($errorResult);
+			TSJIPPY\printArray($errorResult);
 			return $errorResult;
 		}
 	}
@@ -739,7 +743,7 @@ class Mailchimp{
 			return $errorResult;
 		}catch(\Exception $e) {
 			$errorResult = $e->getMessage();
-			SIM\printArray($errorResult);
+			TSJIPPY\printArray($errorResult);
 			return $errorResult;
 		}
 

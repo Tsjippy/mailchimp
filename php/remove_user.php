@@ -1,12 +1,16 @@
 <?php
-namespace SIM\MAILCHIMP;
-use SIM;
+namespace TSJIPPY\MAILCHIMP;
+use TSJIPPY;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 add_action('delete_user', __NAMESPACE__.'\deleteUser');
 function deleteUser($userId){
     //remove category from mailchimp
-    $userTags			= SIM\getModuleOption(MODULE_SLUG, 'user-tags');
-    $missionaryTags	    = SIM\getModuleOption(MODULE_SLUG, 'missionary-tags');
+    $userTags			= SETTINGS['user-tags'] ?? false;
+    $missionaryTags	    = SETTINGS['missionary-tags'] ?? false;
     $tags               = array_merge(explode(',', $userTags), explode(',', $missionaryTags));
     $Mailchimp          = new Mailchimp($userId);
 
