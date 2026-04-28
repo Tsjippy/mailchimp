@@ -5,6 +5,7 @@
 
 ### Changed
 - implemented wp_get_environment_type(
+- module to plugin  Co-authored-by: Copilot <copilot@github.com>
 
 ### Fixed
 
