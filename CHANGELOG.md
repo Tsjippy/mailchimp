@@ -8,6 +8,7 @@
 - implemented wp_get_environment_type(
 - module to plugin  Co-authored-by: Copilot <copilot@github.com>
 - lib updates
+- exclude .vscode from releases
 
 ### Fixed
 
