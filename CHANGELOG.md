@@ -18,7 +18,7 @@
 
 ### Changed
 - implemented wp_get_environment_type(
-- module to plugin  Co-authored-by: Copilot <copilot@github.com>
+- module to plugin  
 - lib updates
 - exclude .vscode from releases
 - updated github workflow versions
