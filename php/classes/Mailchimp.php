@@ -579,7 +579,7 @@ class Mailchimp{
 	 */
 	public function getSegments($type='saved'){
 		if(empty($this->settings['audienceids'][0])){
-			$error	= 'No Audience defined in mailchimp module settings';
+			$error	= 'No Audience defined in mailchimp settings';
 			TSJIPPY\printArray($error);
 			return new \WP_Error('mailchimp', $error);
 		}
