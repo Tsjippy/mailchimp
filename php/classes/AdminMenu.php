@@ -267,7 +267,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
      * Function to do extra actions from $_POST data. Overwrite if needed
      */
     public function postActions(){
-        if(isset($_POST['delete-campaign']) && wp_verify_nonce($_POST['nonce'], 'delete-mailchimp-campaign')){
+        if(isset($_POST['delete-campaign']) && TSJIPPY\verifyNonce('nonce', 'delete-mailchimp-campaign')){
             $mailchimp = new Mailchimp();
             
             $response	= $mailchimp->deleteCampaign($_POST['delete-campaign']);
