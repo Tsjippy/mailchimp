@@ -77,7 +77,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                     'textarea_rows' 			=> 20
                 );
 
-                echo wp_editor(
+                wp_editor(
                     $this->settings["mailchimp_html"],
                     "mailchimp_html",
                     $tinyMceSettings
@@ -109,22 +109,9 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
 
         $tab	= $_GET['second-tab'];
 
-        ?>
-         <style>
-            select{
-                display: none;
-            }
-        </style>
-        <?php
-
         ob_start();
 
         ?>
-        <style>
-            select{
-                display: none;
-            }
-        </style>
         <div class='tablink-wrapper'>
             <button class="tablink <?php if(empty($tab) || $tab == 'audience'){echo 'active';}?>" id="show-audience" data-target="audience" >Audiences</button>
             <button class="tablink <?php if($tab == 'campaigns'){echo 'active';}?>" id="show-campaigns" data-target="campaigns">Campaigns</button>
