@@ -4,12 +4,17 @@
 ### Added
 
 ### Changed
-- implemented new verifyNonce function
-- moved css to css file
 
 ### Fixed
 
 ### Updated
+
+## [10.0.3] - 2026-05-11
+
+
+### Changed
+- implemented new verifyNonce function
+- moved css to css file
 
 ## [10.0.2] - 2026-05-04
 
