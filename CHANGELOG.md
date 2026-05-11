@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- implemented new verifyNonce function
 
 ### Fixed
 
