@@ -5,6 +5,7 @@
 
 ### Changed
 - implemented new verifyNonce function
+- moved css to css file
 
 ### Fixed
 
