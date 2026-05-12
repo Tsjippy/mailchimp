@@ -10,6 +10,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Allow rest api urls for non-logged in users
 add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__.'\addFormResultUrls');
+/**
+ * Adds the form result URLs to the list of allowed REST API URLs.
+ *
+ * @param array $urls The list of allowed REST API URLs.
+ * @return array The updated list of allowed REST API URLs.
+ */
 function addFormResultUrls($urls){
     $urls[] = RESTAPIPREFIX.'/forms/edit_value';
 
@@ -29,7 +35,7 @@ function restApiInit() {
 
 				return true;
 			},
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> '__return_true',		// Allow non-logged in users to access this endpoint
 			'args'					=> array(
 				'post-id'		=> array(
 					'required'	=> true,

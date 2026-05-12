@@ -8,6 +8,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // shows a mailchimp campaign on the page
 add_shortcode("mailchimp", __NAMESPACE__.'\mailchimpCode');
+/**
+ * Displays a mailchimp campaign on the page. If the height of the campaign is not set, it will be displayed in an iframe. If the height is set, it will be displayed in a div.
+ * 
+ * @param array $atts
+ */
 function mailchimpCode($atts){
 	global $post;
 
@@ -18,6 +23,7 @@ function mailchimpCode($atts){
 		$mailchimp = new Mailchimp();
 
 		$dom        = new \DomDocument();
+		/** @disregard P1014 */
 		$dom->loadHTML($mailchimp->client->campaigns->getContent($atts['id'])->html);
 		$href   	= $dom->getElementById('templateFooter');
 		$href->parentNode->removeChild($href);
