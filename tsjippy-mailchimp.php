@@ -37,3 +37,8 @@ register_activation_hook( __FILE__, function(){
 	\TSJIPPY\scheduleTask('add_mailchimp_campaigns_action', 'daily');
 } );
 
+// Remove scheduled tasks upon plugin deactivation
+register_deactivation_hook( __FILE__, function(){
+	wp_clear_scheduled_hook( 'add_mailchimp_campaigns_action' );
+});
+

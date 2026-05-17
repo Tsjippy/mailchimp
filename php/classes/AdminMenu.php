@@ -60,7 +60,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                 <br>
                 <br>
                 <?php
-                do_action('tsjippy-mailchimp-module-extra-tags', $this->settings);
+                do_action('tsjippy-mailchimp-extra-tags', $this->settings);
 
                 ?>
                 <div style='margin-bottom:-30px;'>

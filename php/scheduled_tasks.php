@@ -14,11 +14,6 @@ add_action('init', function(){
     add_action( 'schedule_mailchimp_campaign', __NAMESPACE__.'\asyncMailchimpCampaign');
 });
 
-// Remove scheduled tasks upon module deactivation
-add_action('tsjippy_module_mailchimp_deactivated', function(){
-	wp_clear_scheduled_hook( 'add_mailchimp_campaigns_action' );
-}, 10, 2);
-
 // add mailchimp campains to the website if they have not been created to on the website
 function addMailchimpCampaigns(){
     $mailchimp 	= new Mailchimp();
