@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- deactivation hook
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.0.7] - 2026-05-17
+
+
+### Added
+- deactivation hook
 
 ## [10.0.6] - 2026-05-14
 
