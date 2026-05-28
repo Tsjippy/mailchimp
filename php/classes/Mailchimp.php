@@ -606,7 +606,7 @@ class Mailchimp{
 			$response = $this->client->lists->listSegments(	...$params);
 
 			usort($response->segments, function ($list1, $list2) { 
-				return strtolower($list1->name) > strtolower($list2->name); 
+				return strcmp(strtolower($list1->name), strtolower($list2->name)); 
 			} ); 
 
 			set_transient( 'mailchimp_segments', $response->segments, DAY_IN_SECONDS );
