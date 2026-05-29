@@ -121,7 +121,7 @@ function afterPostSave($post){
     }
 
 	if(is_array($segmentIds) && !empty($segmentIds)){
-        $extraMessage   = str_replace("\n", '<br>', sanitize_text_field($_POST['mailchimp-extra-message']));
+        $extraMessage   = str_replace("\n", '<br>', sanitize_text_field( wp_unslash( $_POST['mailchimp-extra-message'])));
         update_metadata( 'post', $post->ID, 'mailchimp_segment_ids', $segmentIds);
         update_metadata( 'post', $post->ID, 'mailchimp_email', $_POST['mailchimp-email']);
         update_metadata( 'post', $post->ID, 'mailchimp_extra_message', $extraMessage);
