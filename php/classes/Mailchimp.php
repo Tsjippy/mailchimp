@@ -469,7 +469,7 @@ class Mailchimp{
 			$title			= $post->post_title;
 
 			$excerpt 		= html_entity_decode(wp_trim_words($post->post_content, 20));
-			$excerpt 		= strip_tags(str_replace('<br>',"\n",$excerpt)).'...';
+			$excerpt 		= wp_strip_all_tags(str_replace('<br>',"\n",$excerpt)).'...';
 
 			if($from == ''){
 				$email		= get_userdata($post->post_author)->user_email;
