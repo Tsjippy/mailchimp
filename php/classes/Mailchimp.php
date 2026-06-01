@@ -9,8 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 //https://mailchimp.com/developer/marketing
 
-require_once( PLUGINPATH  . 'lib/vendor/autoload.php');
-
 if(class_exists(__NAMESPACE__.'\Mailchimp')){
 	return;
 }
