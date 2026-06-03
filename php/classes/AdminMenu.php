@@ -125,7 +125,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
 
                     ?>
                     <tr>
-                        <th colspan='5'>Audience <?php echo $list->name;?></th>
+                        <th colspan='5'>Audience <?php echo esc_attr($list->name);?></th>
                     </tr>
                     <tr>
                         <th>Name</th>
@@ -233,8 +233,8 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                         ?>
                         <td>
                             <form method='POST'>
-                                <input type='hidden' class='no-reset' name='delete-campaign'	value='<?php echo $campaign->id;?>'>
-                                <input type='hidden' class='no-reset' name='nonce' value='<?php echo $nonce;?>'>
+                                <input type='hidden' class='no-reset' name='delete-campaign'	value='<?php echo esc_attr($campaign->id);?>'>
+                                <input type='hidden' class='no-reset' name='nonce' value='<?php echo esc_attr($nonce);?>'>
                                 <button type='submit'>Delete</button>
                             </form>
                         </td>

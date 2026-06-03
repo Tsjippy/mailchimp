@@ -52,12 +52,12 @@ function afterContent($frontendContend){
 
     ?>
     <div id="mailchimp" class="frontend-form">
-        <h4>Send <span class="replace-post-type"><?php echo $frontendContend->postType;?></span> contents to the following Mailchimp segement(s) on <?php echo $frontendContend->update ? 'update' : 'publish';?>:</h4>
+        <h4>Send <span class="replace-post-type"><?php echo esc_attr($frontendContend->postType);?></span> contents to the following Mailchimp segement(s) on <?php echo $frontendContend->update ? 'update' : 'publish';?>:</h4>
         <?php
         if(!empty($sendSegment)){
             ?>
             <div class='warning' style='width: fit-content;'>
-                An e-mail has already been send to the <?php echo $sendSegment;?> group.
+                An e-mail has already been send to the <?php echo esc_attr($sendSegment);?> group.
             </div>
             <?php
         }
@@ -90,7 +90,7 @@ function afterContent($frontendContend){
 
         <div class='mailchimp-wrapper <?php if(!is_array($mailchimpSegmentIds)){echo 'hidden';}?>' >
             <h4>Use this from e-mail address</h4>
-            <input type='text' name='mailchimp-email' list='emails' value='<?php echo $mailchimpEmail;?>'>
+            <input type='text' name='mailchimp-email' list='emails' value='<?php echo esc_attr($mailchimpEmail);?>'>
             <datalist id='emails'>
                 <?php
                 $emails = apply_filters('tsjippy-mailchimp-from', []);
