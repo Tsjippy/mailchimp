@@ -19,7 +19,7 @@ function addMailchimpCampaigns(){
     $mailchimp 	= new Mailchimp();
 
     // get all mailchimp campaigns created yesterday
-    $result		= $mailchimp->getCampaigns(date("Y-m-d", strtotime('-1 day')).'T00:00:00+00:00');
+    $result		= $mailchimp->getCampaigns(gmdate("Y-m-d", strtotime('-1 day')).'T00:00:00+00:00');
 
     $pictures	= SETTINGS['picture-ids'] ?? false;
 

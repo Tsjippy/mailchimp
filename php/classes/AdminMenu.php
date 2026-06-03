@@ -196,7 +196,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
         <?php
 
         // get all mailchimp campaigns created this year
-        $result		= $mailchimp->getCampaigns(date("Y-m-d", strtotime('-1 year')).'T00:00:00+00:00');
+        $result		= $mailchimp->getCampaigns(gmdate("Y-m-d", strtotime('-1 year')).'T00:00:00+00:00');
 
         $nonce		= wp_create_nonce('delete-mailchimp-campaign');
         
