@@ -2,48 +2,48 @@
 namespace TSJIPPY\MAILCHIMP;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
-add_action('tsjippy_frontend_post_before_content', __NAMESPACE__.'\beforeContent');
-function beforeContent($object){
+add_action('tsjippy_frontend_post_before_content', __NAMESPACE__ . '\beforeContent');
+function beforeContent($object) {
     // check for mailchim audience id shortcode
-    if(!preg_match('/\[mailchimp id=\'(.*?)\'\]/',$object->postContent, $matches)){
+    if (!preg_match('/\[mailchimp id=\'(.*?)\'\]/',$object->postContent, $matches)) {
         return;
     }
 
     $mailchimp      = new Mailchimp($object->user->ID);
     $campaign       = $mailchimp->getCampaign($matches[1]);
 
-    if(!empty($campaign->long_archive_url)){
+    if (!empty($campaign->long_archive_url)) {
         echo "<h4>Mailchimp campaign url</h4>";
         echo "<a href='$campaign->long_archive_url' target='_blank'>Check the online mailchimp campaign</a>";
     }
 }
 
 // add the mailchimp fields to the content creation form
-add_action('tsjippy_frontend_post_after_content', __NAMESPACE__.'\afterContent');
-function afterContent($frontendContend){
+add_action('tsjippy_frontend_post_after_content', __NAMESPACE__ . '\afterContent');
+function afterContent($frontendContend) {
     $mailchimpSegmentIds    = $frontendContend->getPostMeta('mailchimp_segment_ids');
-    $mailchimpEmail		    = $frontendContend->getPostMeta('mailchimp_email');
+    $mailchimpEmail            = $frontendContend->getPostMeta('mailchimp_email');
     $mailchimpExtraMessage  = $frontendContend->getPostMeta('mailchimp_extra_message');
     $Mailchimp              = new Mailchimp($frontendContend->user->ID);
     $segments               = $Mailchimp->getSegments();
 
-    if(!$segments){
+    if (!$segments) {
         return;
     }
-    
+
     // If the post is already send to a segment, show that segment
     $sendSegment    = $frontendContend->getPostMeta('mailchimp_message_send');
-    if(is_numeric($sendSegment)){
+    if (is_numeric($sendSegment)) {
         $sendSegment    = [$sendSegment];
     }
 
-    if(is_array($sendSegment)){
-        foreach($segments as $segment){
-            if($sendSegment[0] == $segment->id){
+    if (is_array($sendSegment)) {
+        foreach ($segments as $segment) {
+            if ($sendSegment[0] == $segment->id) {
                 $sendSegment    = $segment->name;
                 break;
             }
@@ -54,7 +54,7 @@ function afterContent($frontendContend){
     <div id="mailchimp" class="frontend-form">
         <h4>Send <span class="replace-post-type"><?php echo esc_attr($frontendContend->postType);?></span> contents to the following Mailchimp segement(s) on <?php echo $frontendContend->update ? 'update' : 'publish';?>:</h4>
         <?php
-        if(!empty($sendSegment)){
+        if (!empty($sendSegment)) {
             ?>
             <div class='warning' style='width: fit-content;'>
                 An e-mail has already been send to the <?php echo esc_attr($sendSegment);?> group.
@@ -63,22 +63,22 @@ function afterContent($frontendContend){
         }
         ?>
         <script>
-            function showMailChimp(el){
-                if(el.value == ''){
-                    el.closest('div').querySelectorAll('.mailchimp-wrapper').forEach(el => el.classList.add('hidden'));
+            function showMailChimp(el) {
+                if (el.value == '') {
+                    el.closest('div').querySelectorAll(' .mailchimp-wrapper').foreach (el => el.classList.add('hidden'));
                 }else{
-                    el.closest('div').querySelectorAll('.mailchimp-wrapper').forEach(el => el.classList.remove('hidden'));
+                    el.closest('div').querySelectorAll(' .mailchimp-wrapper').foreach (el => el.classList.remove('hidden'));
                 }
             }
         </script>
         <select name='mailchimp-segment-ids[]' onchange="showMailChimp(this)" multiple='multiple'>
             <option value="">---</option>
             <?php
-            foreach($segments as $segment){
+            foreach ($segments as $segment) {
                 // Do not send it to the same group twice
-                if($sendSegment == $segment->id){
+                if ($sendSegment == $segment->id) {
                     continue;
-                }elseif(is_array($mailchimpSegmentIds) && in_array($segment->id, $mailchimpSegmentIds)){
+                }elseif (is_array($mailchimpSegmentIds) && in_array($segment->id, $mailchimpSegmentIds)) {
                     $selected = 'selected="selected"';
                 }else{
                     $selected = '';
@@ -88,13 +88,13 @@ function afterContent($frontendContend){
             ?>
         </select>
 
-        <div class='mailchimp-wrapper <?php if(!is_array($mailchimpSegmentIds)){echo 'hidden';}?>' >
+        <div class='mailchimp-wrapper <?php if (!is_array($mailchimpSegmentIds)) {echo 'hidden';}?>' >
             <h4>Use this from e-mail address</h4>
             <input type='text' name='mailchimp-email' list='emails' value='<?php echo esc_attr($mailchimpEmail);?>'>
             <datalist id='emails'>
                 <?php
                 $emails = apply_filters('tsjippy-mailchimp-from', []);
-                foreach($emails as $email=>$text){
+                foreach ($emails as $email=>$text) {
                     echo "<option value='$email'>$text</option>";
                 }
                 ?>
@@ -107,70 +107,70 @@ function afterContent($frontendContend){
     <?php
 }
 
-add_action('tsjippy_after_post_save', __NAMESPACE__.'\afterPostSave');
-function afterPostSave($post){
-    if(empty($_POST['mailchimp-segment-ids'])){
+add_action('tsjippy_after_post_save', __NAMESPACE__ . '\afterPostSave');
+function afterPostSave($post) {
+    if (empty($_POST['mailchimp-segment-ids'])) {
         return;
     }
 
-	//Mailchimp
+    //Mailchimp
     $segmentIds = $_POST['mailchimp-segment-ids'];
 
-    if(!is_array($segmentIds)){
+    if (!is_array($segmentIds)) {
         $segmentIds = explode(",", $_POST['mailchimp-segment-ids']);
     }
 
-	if(is_array($segmentIds) && !empty($segmentIds)){
-        $extraMessage   = str_replace("\n", '<br>', sanitize_text_field( wp_unslash( $_POST['mailchimp-extra-message'])));
-        update_metadata( 'post', $post->ID, 'mailchimp_segment_ids', $segmentIds);
-        update_metadata( 'post', $post->ID, 'mailchimp_email', $_POST['mailchimp-email']);
-        update_metadata( 'post', $post->ID, 'mailchimp_extra_message', $extraMessage);
+    if (is_array($segmentIds) && !empty($segmentIds)) {
+        $extraMessage   = str_replace("\n", '<br>', sanitize_text_field(wp_unslash($_POST['mailchimp-extra-message'])));
+        update_metadata('post', $post->ID, 'mailchimp_segment_ids', $segmentIds);
+        update_metadata('post', $post->ID, 'mailchimp_email', $_POST['mailchimp-email']);
+        update_metadata('post', $post->ID, 'mailchimp_extra_message', $extraMessage);
     }else{
-        delete_metadata( 'post', $post->ID, 'mailchimp_segment_ids');
-        delete_metadata( 'post', $post->ID, 'mailchimp_email');
-        delete_metadata( 'post', $post->ID, 'mailchimp_extra_message');
+        delete_metadata('post', $post->ID, 'mailchimp_segment_ids');
+        delete_metadata('post', $post->ID, 'mailchimp_email');
+        delete_metadata('post', $post->ID, 'mailchimp_extra_message');
     }
 }
 
-add_action( 'wp_after_insert_post', __NAMESPACE__.'\afterInsertPost', 10, 3);
-function afterInsertPost( $postId, $post ){
-    if(in_array($post->post_status, ['publish', 'inherit'])){
+add_action('wp_after_insert_post', __NAMESPACE__ . '\afterInsertPost', 10, 3);
+function afterInsertPost($postId, $post) {
+    if (in_array($post->post_status, ['publish', 'inherit'])) {
         // send asynchronous as sending a campaign is slow
         wp_schedule_single_event(time(), 'schedule_mailchimp_campaign', [$postId]);
     }
 }
 
-function asyncMailchimpCampaign($postId){
+function asyncMailchimpCampaign($postId) {
     $segmentIds     = get_post_meta($postId, 'mailchimp_segment_ids', true);
     $from           = get_post_meta($postId, 'mailchimp_email', true);
     $extraMessage   = get_post_meta($postId, 'mailchimp_extra_message', true);
 
-    if(empty($segmentIds)){
+    if (empty($segmentIds)) {
         return;
     }
 
-    if(empty($from)){
+    if (empty($from)) {
         TSJIPPY\printArray('No from e-mail address set for Mailchimp campaign', 'error');
         return;
     }
-    
+
     //Send mailchimp message
     $Mailchimp  = new Mailchimp();
     $segmentIdsSent  = [];
-    foreach($segmentIds as $segmentId){
-        if(!is_numeric($segmentId)){
+    foreach ($segmentIds as $segmentId) {
+        if (!is_numeric($segmentId)) {
             continue;
         }
 
         $result     = $Mailchimp->sendEmail($postId, intval($segmentId), $from, $extraMessage);
 
-        if($result == 'succes'){
+        if ($result == 'succes') {
             $segmentIdsSent[]   = $segmentId;
         }
     }
 
     // Indicate as send
-    if(!empty($segmentIdsSent)){
+    if (!empty($segmentIdsSent)) {
         //delete any post metakey
         delete_post_meta($postId, 'mailchimp_segment_ids');
         delete_post_meta($postId, 'mailchimp_email');
