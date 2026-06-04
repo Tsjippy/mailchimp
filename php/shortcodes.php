@@ -1,8 +1,10 @@
 <?php
+
 namespace TSJIPPY\MAILCHIMP;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -13,7 +15,8 @@ add_shortcode("mailchimp", __NAMESPACE__ . '\mailchimpCode');
  *
  * @param array $atts
  */
-function mailchimpCode($atts) {
+function mailchimpCode($atts)
+{
     global $post;
 
     $height = get_post_meta($post->ID, 'mailchimp_height', true);
@@ -44,8 +47,8 @@ function mailchimpCode($atts) {
                 FormSubmit.fetchRestApi('mailchimp/store_height', formData);
             });
         </script>";
-        $html    .= "<div class='mailchimp-wrapper'>" .$dom->saveHTML($dom->getElementsByTagName('style')->item(0)).$content. "</div>";
-    }else{
+        $html    .= "<div class='mailchimp-wrapper'>" . $dom->saveHTML($dom->getElementsByTagName('style')->item(0)) . $content . "</div>";
+    } else {
         $url = get_post_meta($post->ID, 'mailchimp_url', true);
         if ($url == '') {
             $mailchimp     = new Mailchimp();

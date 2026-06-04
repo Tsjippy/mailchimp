@@ -1,4 +1,5 @@
 <?php
+
 namespace TSJIPPY\MAILCHIMP;
 
 /**
@@ -19,7 +20,7 @@ namespace TSJIPPY\MAILCHIMP;
  *
  * @author Ewald Harmsen
  */
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -41,4 +42,3 @@ register_activation_hook(__FILE__, function () {
 register_deactivation_hook(__FILE__, function () {
     wp_clear_scheduled_hook('add_mailchimp_campaigns_action');
 });
-

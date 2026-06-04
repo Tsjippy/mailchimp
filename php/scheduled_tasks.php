@@ -1,8 +1,10 @@
 <?php
+
 namespace TSJIPPY\MAILCHIMP;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -15,11 +17,12 @@ add_action('init', function () {
 });
 
 // add mailchimp campains to the website if they have not been created to on the website
-function addMailchimpCampaigns() {
+function addMailchimpCampaigns()
+{
     $mailchimp     = new Mailchimp();
 
     // get all mailchimp campaigns created yesterday
-    $result        = $mailchimp->getCampaigns(gmdate("Y-m-d", strtotime('-1 day')). 'T00:00:00+00:00');
+    $result        = $mailchimp->getCampaigns(gmdate("Y-m-d", strtotime('-1 day')) . 'T00:00:00+00:00');
 
     $pictures    = SETTINGS['picture-ids'] ?? false;
 
@@ -27,7 +30,7 @@ function addMailchimpCampaigns() {
         'post_type'        => 'post',
         'post_status'   => "pending",
         'post_author'   => 1
-   );
+    );
 
     foreach ($result->campaigns as $campaign) {
         // make sure we do not add the same post twice
@@ -40,22 +43,22 @@ function addMailchimpCampaigns() {
                 array(
                     'key'         => 'mailchimp_campaign_id',
                     'compare'     => 'EXISTS'
-               ),
+                ),
                 array(
                     'key'         => 'mailchimp_campaign_id',
                     'value'     => $campaign->id,
                     'compare'     => '='
-               ),
-           )
-       ));
+                ),
+            )
+        ));
 
         // do not add mailchimp campaigns created by the website
-        if ( empty($posts)) {
+        if (empty($posts)) {
             $post['post-title']        = $campaign->settings->title;
-            if (empty($post['post-title']   )) {
+            if (empty($post['post-title'])) {
                 if (!empty($campaign->settings->subject_line)) {
                     $post['post-title']    = $campaign->settings->subject_line;
-                }else{
+                } else {
                     continue;
                 }
             }

@@ -1,9 +1,11 @@
 <?php
+
 namespace TSJIPPY\MAILCHIMP;
+
 use TSJIPPY;
 use WP_Error;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -13,7 +15,8 @@ if (class_exists(__NAMESPACE__ . '\Mailchimp')) {
     return;
 }
 
-class Mailchimp{
+class Mailchimp
+{
     public $userId;
     public $settings;
     public $user;
@@ -21,7 +24,8 @@ class Mailchimp{
     public $mailchimpStatus;
     public $client;
 
-    public function __construct($userId='') {
+    public function __construct($userId = '')
+    {
         $this->settings        = SETTINGS;
 
         if (is_numeric($userId)) {
@@ -47,21 +51,22 @@ class Mailchimp{
      *
      * @return    array    merge tags
      */
-    public function buildMergeTags() {
+    public function buildMergeTags()
+    {
         $mergeFields = array(
             'FNAME'     => $this->user->first_name,
             'LNAME'     => $this->user->last_name,
-       );
+        );
 
         if (is_array($this->phonenumbers)) {
             $mergeFields['PHONE'] = $this->phonenumbers[1];
         }
 
-        $birthday = get_user_meta($this->user->ID, "birthday",true);
+        $birthday = get_user_meta($this->user->ID, "birthday", true);
         if (!empty($birthday)) {
-            $birthday                = explode('-',$birthday);
+            $birthday                = explode('-', $birthday);
             //Mailchimp wants only the month and the day
-            $mergeFields['BIRTHDAY'] = $birthday[1]. '/' .$birthday[2];
+            $mergeFields['BIRTHDAY'] = $birthday[1] . '/' . $birthday[2];
         }
 
         return $mergeFields;
@@ -70,7 +75,8 @@ class Mailchimp{
     /**
      * Add user to mailchimp list
      */
-    public function addToMailchimp($email='', $firstName='', $lastName='', $phoneNumber='', $birthday='', $address='') {
+    public function addToMailchimp($email = '', $firstName = '', $lastName = '', $phoneNumber = '', $birthday = '', $address = '')
+    {
         if (!empty($email)) {
             $mergeFields = [];
 
@@ -88,8 +94,8 @@ class Mailchimp{
 
             if (!empty($birthday)) {
                 $birthday                    = explode('-', $birthday);
-                $mergeFields['BIRTHDAY']    = $birthday[1]. '/' .$birthday[2];
-                $mergeFields['BIRTHDATE']    = $birthday[1]. '/' .$birthday[2]. '/' .$birthday[0];
+                $mergeFields['BIRTHDAY']    = $birthday[1] . '/' . $birthday[2];
+                $mergeFields['BIRTHDATE']    = $birthday[1] . '/' . $birthday[2] . '/' . $birthday[0];
             }
 
             if (!empty($address)) {
@@ -100,7 +106,7 @@ class Mailchimp{
         }
 
         //Only do if valid e-mail
-        elseif (!empty($this->user->user_email) && !str_contains($this->user->user_email,' .empty') && wp_get_environment_type() !== 'local') {
+        elseif (!empty($this->user->user_email) && !str_contains($this->user->user_email, ' .empty') && wp_get_environment_type() !== 'local') {
             TSJIPPY\printArray("Adding '{$this->user->user_email}' to Mailchimp");
 
             //First add to the audience
@@ -112,7 +118,7 @@ class Mailchimp{
             $confidentialGroups    = TSJIPPY\CONTENTFILTER\SETTINGS['confidential-roles'] ?? [];
             if (array_intersect($confidentialGroups, $roles)) {
                 $tags = explode(',', $this->settings['user-tags']);
-            }else{
+            } else {
                 $tags = array_merge(explode(',', $this->settings['user-tags']), explode(',', $this->settings['missionary-tags']));
             }
 
@@ -126,12 +132,13 @@ class Mailchimp{
      * @param    array    $tags    The tags to add to a user
      * @param    string    $status    On of active or inactive
      */
-    public function changeTags($tags, $status) {
+    public function changeTags($tags, $status)
+    {
         if (!is_array($this->mailchimpStatus)) {
             $this->mailchimpStatus = [];
         }
 
-        if ($this->user->user_mail == '' || str_contains($this->user->user_mail,' .empty')) {
+        if ($this->user->user_mail == '' || str_contains($this->user->user_mail, ' .empty')) {
             return;
         }
 
@@ -144,25 +151,25 @@ class Mailchimp{
                     $response = $this->setTag($tag, $status);
 
                     //Subscription succesfull
-                    if ( $response) {
+                    if ($response) {
                         TSJIPPY\printArray("Succesfully added the $tag tag to {$this->user->display_name}");
-                    //Subscription failed
-                    }else{
+                        //Subscription failed
+                    } else {
                         TSJIPPY\printArray("Tag $tag  was not added to user wih email {$this->user->user_mail}} because: $response");
                     }
 
                     //Store result
                     $this->mailchimpStatus[$tag] = $response;
-                }elseif ($status == 'inactive' && isset($this->mailchimpStatus[$tag])) {
+                } elseif ($status == 'inactive' && isset($this->mailchimpStatus[$tag])) {
                     //Process tag
                     $response = $this->setTag($tag, $status);
 
                     //Unsubscription succesfull
-                    if ( $response) {
+                    if ($response) {
                         TSJIPPY\printArray("Succesfully removed the $tag tag from {$this->user->display_name}");
                         unset($this->mailchimpStatus[$tag]);
-                    //Subscription failed
-                    }else{
+                        //Subscription failed
+                    } else {
                         TSJIPPY\printArray("Tag $tag  was not removed from user {$this->user->display_name} because: $response");
                     }
                 }
@@ -178,7 +185,8 @@ class Mailchimp{
      *
      * @return    array|string    the lists or an error string
      */
-    public function getLists() {
+    public function getLists()
+    {
         try {
             /** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
             $lists = $this->client->lists->getAllLists(null, null, 999, 'saved');
@@ -186,12 +194,12 @@ class Mailchimp{
         }
 
         //catch exception
-        catch(\GuzzleHttp\Exception\ClientException $e) {
+        catch (\GuzzleHttp\Exception\ClientException $e) {
             $result            = json_decode($e->getResponse()->getBody()->getContents());
-            $errorResult    = $result->detail. "<pre>" .print_r($result->errors,true). "</pre>";
+            $errorResult    = $result->detail . "<pre>" . print_r($result->errors, true) . "</pre>";
             TSJIPPY\printArray($errorResult);
             return $errorResult;
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             $errorResult = $e->getMessage();
 
             TSJIPPY\printArray($errorResult);
@@ -205,7 +213,8 @@ class Mailchimp{
      *
      * @param    string    $listId        The id of the list you want to get the members of
      */
-    public function getListMembersInfo($listId) {
+    public function getListMembersInfo($listId)
+    {
         /** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
         $members = $this->client->lists->getListMembersInfo($listId, null, null, 999, '0', null, "subscribed")->members;
 
@@ -220,7 +229,8 @@ class Mailchimp{
      *
      * @return    array|string    The result or error
      */
-    public function subscribeMember($mergeFields, $email='') {
+    public function subscribeMember($mergeFields, $email = '')
+    {
         try {
             if (empty($email)) {
                 $email = $this->user->user_email;
@@ -235,13 +245,13 @@ class Mailchimp{
                     "status_if_new" => 'subscribed',
                     "merge_fields"     => $mergeFields
                 ]
-           );
-        }catch(\GuzzleHttp\Exception\ClientException $e) {
+            );
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             $result = json_decode($e->getResponse()->getBody()->getContents());
-            $errorResult = $result->detail. "<pre>" .print_r($result->errors,true). "</pre>";
+            $errorResult = $result->detail . "<pre>" . print_r($result->errors, true) . "</pre>";
             TSJIPPY\printArray($errorResult);
             return $errorResult;
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             $errorResult = $e->getMessage();
             TSJIPPY\printArray($errorResult);
             return $errorResult;
@@ -256,36 +266,37 @@ class Mailchimp{
      *
      * @return    true|WP_Error        true on succes else failure
      */
-    public function setTag($tagname, $status) {
+    public function setTag($tagname, $status)
+    {
         try {
 
             /** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
             $this->client->lists->updateListMemberTags(
                 $this->settings['audienceids'][0],
                 md5(strtolower($this->user->user_email)),
-                ['tags'=> [
+                ['tags' => [
                     [
                         "name"         => $tagname,
                         "status"     => $status
                     ]
                 ]]
-           );
+            );
 
             return true;
         }
 
         //catch exception
-        catch(\GuzzleHttp\Exception\ClientException $e) {
+        catch (\GuzzleHttp\Exception\ClientException $e) {
             $result = json_decode($e->getResponse()->getBody()->getContents());
 
             if ($result->detail == "The requested resource could not be found. ") {
                 $this->addToMailchimp();
             }
 
-            $errorResult = $result->detail. "<pre>" .print_r($result->errors,true). "</pre>";
+            $errorResult = $result->detail . "<pre>" . print_r($result->errors, true) . "</pre>";
             TSJIPPY\printArray($errorResult);
             return new WP_Error('mailchimp', $errorResult);
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             $errorResult = $e->getMessage();
             TSJIPPY\printArray($errorResult);
             return new WP_Error('mailchimp', $errorResult);
@@ -298,8 +309,9 @@ class Mailchimp{
      * @param    string    $content    The content to look for links in
      *
      * @return    string                The content with clickale links and mailchimp video tags
-    */
-    private function processLinks($content, $postId) {
+     */
+    private function processLinks($content, $postId)
+    {
         // Find all urls
         $pattern = '~https?://([a-z]*?)\.([a-z]+)\.?([a-z]*)([^\s">]*)~';
         preg_match_all($pattern, $content, $matches);
@@ -317,7 +329,7 @@ class Mailchimp{
 
             if (in_array($matches[1][$index], array_keys($mailchimpSupportedVideoProviders))) {
                 $provider   = $mailchimpSupportedVideoProviders[$matches[1][$index]];
-            }elseif (in_array($matches[2][$index], array_keys($mailchimpSupportedVideoProviders))) {
+            } elseif (in_array($matches[2][$index], array_keys($mailchimpSupportedVideoProviders))) {
                 $provider   = $mailchimpSupportedVideoProviders[$matches[2][$index]];
             }
 
@@ -336,10 +348,10 @@ class Mailchimp{
                     case 'YOUTUBE':
                         if (str_contains($matches[4][$index], '/watch?v=')) {
                             $id = explode('/watch?v=', $matches[4][$index])[1];
-                        }elseif (str_contains($matches[4][$index], '/embed/')) {
+                        } elseif (str_contains($matches[4][$index], '/embed/')) {
                             $id = explode('/', $matches[4][$index])[2];
                             $id    = explode('?', $id)[0];
-                        }else{
+                        } else {
                             $id = explode('/', $matches[4][$index])[1];
                         }
 
@@ -370,9 +382,9 @@ class Mailchimp{
                         $width      = imagesx($dest);
                         $height     = imagesy($dest);
 
-                        $src        = imagecreatefrompng(WP_PLUGIN_DIR. "/tsjippy-mailchimp/pictures/play-mq.png");
+                        $src        = imagecreatefrompng(WP_PLUGIN_DIR . "/tsjippy-mailchimp/pictures/play-mq.png");
                         if (!$src) {
-                            TSJIPPY\printArray("Creating image failed for " .WP_PLUGIN_DIR. "/tsjippy-mailchimp/pictures/play-mq.png");
+                            TSJIPPY\printArray("Creating image failed for " . WP_PLUGIN_DIR . "/tsjippy-mailchimp/pictures/play-mq.png");
 
                             return false;
                         }
@@ -381,10 +393,10 @@ class Mailchimp{
                         $srcHeight     = imagesy($src);
 
                         // Copy and merge
-                        imagecopy($dest, $src, ($width - $srcWidth)/2, ($height - $srcHeight) / 2, 0, 0, $srcWidth, $srcHeight);
+                        imagecopy($dest, $src, ($width - $srcWidth) / 2, ($height - $srcHeight) / 2, 0, 0, $srcWidth, $srcHeight);
 
                         // Output and free from memory
-                        $path            = WP_PLUGIN_DIR. "/tsjippy-mailchimp/pictures/$postId.jpg";
+                        $path            = WP_PLUGIN_DIR . "/tsjippy-mailchimp/pictures/$postId.jpg";
 
                         imagejpeg($dest, $path);
 
@@ -405,7 +417,7 @@ class Mailchimp{
                 if (empty($newUrl)) {
                     $newUrl    = "*|$provider:[\$vid=$id]|*";
                 }
-            }else{
+            } else {
                 if (is_array(getimagesize($url))) {
                     $alt    = explode('/', $url);
                     $alt    = $alt[count($alt) - 1];
@@ -419,9 +431,9 @@ class Mailchimp{
 
             if (preg_match("/<iframe.*src=\"$pregUrl\" .*><\/iframe>/isU", $content, $iframes)) {
                 $content    = str_replace($iframes[0], $newUrl, $content);
-            }elseif (preg_match("/<div class=\"wp-block-image\">.*$pregUrl.*<\/div>/isU", $content, $blocks)) {
+            } elseif (preg_match("/<div class=\"wp-block-image\">.*$pregUrl.*<\/div>/isU", $content, $blocks)) {
                 $content    = str_replace($blocks[0], $newUrl, $content);
-            }else{
+            } else {
                 $content    = str_replace($url, $newUrl, $content);
             }
         }
@@ -429,7 +441,8 @@ class Mailchimp{
         return $content;
     }
 
-    private function removeGreeting($postContent) {
+    private function removeGreeting($postContent)
+    {
         $lines      = preg_split('/([(\r)(\n)(,)(.)])/', $postContent, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         $firstLine  = strtolower($lines[0]);
 
@@ -440,7 +453,7 @@ class Mailchimp{
             str_contains($firstLine, 'good morning') ||
             str_contains($firstLine, 'good evening') ||
             str_contains($firstLine, 'hey ')
-       ) {
+        ) {
             unset($lines[0], $lines[1]);
             $postContent    = trim(force_balance_tags(implode('', $lines)));
         }
@@ -458,7 +471,8 @@ class Mailchimp{
      * @param    bool    $full            Whether or not to send the full post content or only a summary
      * @param    string    $finalMessage    The extra message to add to the mail content
      */
-    public function sendEmail(int $postId, int $segmentId, $from='', $extraMessage='', $full=true, $finalMessage='') {
+    public function sendEmail(int $postId, int $segmentId, $from = '', $extraMessage = '', $full = true, $finalMessage = '')
+    {
         try {
             if (wp_get_environment_type() === 'local' || get_option("wpstg_is_staging_site") == "true") {
                 return 'Not sending from localhost';
@@ -469,16 +483,16 @@ class Mailchimp{
             $title            = $post->post_title;
 
             $excerpt         = html_entity_decode(wp_trim_words($post->post_content, 20));
-            $excerpt         = wp_strip_all_tags(str_replace('<br>',"\n",$excerpt)). ' ... ';
+            $excerpt         = wp_strip_all_tags(str_replace('<br>', "\n", $excerpt)) . ' ... ';
 
             if ($from == '') {
                 $email        = get_userdata($post->post_author)->user_email;
-            }else{
+            } else {
                 $email        = $from;
             }
 
             //Create an empty campain
-            try{
+            try {
                 /** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
                 $createResult = $this->client->campaigns->create(
                     [
@@ -499,13 +513,13 @@ class Mailchimp{
                             //"template_id"    => (int)$this->settings['templateid']
                         ]
                     ]
-               );
-            }catch(\GuzzleHttp\Exception\ClientException $e) {
+                );
+            } catch (\GuzzleHttp\Exception\ClientException $e) {
                 $result = json_decode($e->getResponse()->getBody()->getContents());
-                $errorResult = $result->detail. "<pre>" .print_r($result->errors,true). "</pre>";
+                $errorResult = $result->detail . "<pre>" . print_r($result->errors, true) . "</pre>";
                 TSJIPPY\printArray($errorResult);
                 return $errorResult;
-            }catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $errorResult = $e->getMessage();
                 TSJIPPY\printArray($errorResult);
                 return $errorResult;
@@ -518,7 +532,7 @@ class Mailchimp{
             $mailContent         = apply_filters('the_content', get_the_content(null, false, $postId), 'mailchimp');
 
             //Update the html
-            $mailContent        = $extraMessage. '<br>' .$this->removeGreeting($mailContent).$finalMessage;
+            $mailContent        = $extraMessage . '<br>' . $this->removeGreeting($mailContent) . $finalMessage;
 
             $mailContent        = $this->processLinks($mailContent, $postId);
 
@@ -539,7 +553,7 @@ class Mailchimp{
                 [
                     "html"            => $mailContent,
                 ]
-           );
+            );
 
             //Send the campain
             /** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
@@ -556,12 +570,12 @@ class Mailchimp{
         }
 
         //catch exception
-        catch(\GuzzleHttp\Exception\ClientException $e) {
+        catch (\GuzzleHttp\Exception\ClientException $e) {
             $result = json_decode($e->getResponse()->getBody()->getContents());
-            $errorResult = $result->detail. "<pre>" .print_r($result->errors,true). "</pre>";
+            $errorResult = $result->detail . "<pre>" . print_r($result->errors, true) . "</pre>";
             TSJIPPY\printArray($errorResult);
             return $errorResult;
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             $errorResult = $e->getMessage();
             TSJIPPY\printArray($errorResult);
             return $errorResult;
@@ -575,7 +589,8 @@ class Mailchimp{
      * @param    string            $type    The Segment type one of "all", "saved", "static", or "fuzzy"
      * @return    array|string            Segments array or error string
      */
-    public function getSegments($type='saved') {
+    public function getSegments($type = 'saved')
+    {
         if (empty($this->settings['audienceids'][0])) {
             $error    = 'No Audience defined in mailchimp settings';
             TSJIPPY\printArray($error);
@@ -601,7 +616,7 @@ class Mailchimp{
 
         try {
             /** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
-            $response = $this->client->lists->listSegments(   ...$params);
+            $response = $this->client->lists->listSegments(...$params);
 
             usort($response->segments, function ($list1, $list2) {
                 return strcmp(strtolower($list1->name), strtolower($list2->name));
@@ -613,10 +628,10 @@ class Mailchimp{
         }
 
         //catch exception
-        catch(\GuzzleHttp\Exception\ClientException $e) {
+        catch (\GuzzleHttp\Exception\ClientException $e) {
             $result = json_decode($e->getResponse()->getBody()->getContents());
-            return $result->detail. "<pre>" .print_r($result->errors,true). "</pre>";
-        }catch(\Exception $e) {
+            return $result->detail . "<pre>" . print_r($result->errors, true) . "</pre>";
+        } catch (\Exception $e) {
             $errorResult = $e->getMessage();
             TSJIPPY\printArray($errorResult);
             return $errorResult;
@@ -628,7 +643,8 @@ class Mailchimp{
      *
      * @return    array|string    Templates or error string
      */
-    public function getTemplates() {
+    public function getTemplates()
+    {
         try {
             /** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
             $response = $this->client->templates->list(
@@ -640,18 +656,18 @@ class Mailchimp{
                 null,        // sinceDateCreated
                 null,        // beforeDateCreated
                 'user'        // type
-           );
+            );
 
             return $response->templates;
         }
 
         //catch exception
-        catch(\GuzzleHttp\Exception\ClientException $e) {
+        catch (\GuzzleHttp\Exception\ClientException $e) {
             $result = json_decode($e->getResponse()->getBody()->getContents());
-            $errorResult = $result->detail. "<pre>" .print_r($result->errors,true). "</pre>";
+            $errorResult = $result->detail . "<pre>" . print_r($result->errors, true) . "</pre>";
             TSJIPPY\printArray($errorResult);
             return $errorResult;
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             $errorResult = $e->getMessage();
             TSJIPPY\printArray($errorResult);
             return $errorResult;
@@ -663,7 +679,8 @@ class Mailchimp{
      * @param    array    $tags    array of tags
      * @param    string    $status    active or inactive
      */
-    public function updateFamilyTags($tags, $status) {
+    public function updateFamilyTags($tags, $status)
+    {
         $this->changeTags($this->user->ID, $tags, $status);
 
         //Update the meta key for all family members as well
@@ -683,21 +700,22 @@ class Mailchimp{
      *
      * @param    int        $id        The campaign Id.
      */
-    public function getCampaign($id) {
-        try{
+    public function getCampaign($id)
+    {
+        try {
             /** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
             return $this->client->campaigns->get($id);
         }
         //catch exception
-        catch(\GuzzleHttp\Exception\ClientException $e) {
+        catch (\GuzzleHttp\Exception\ClientException $e) {
             $result            = json_decode($e->getResponse()->getBody()->getContents());
             $errorResult    = $result->detail;
             if (isset($result->errors)) {
-                $errorResult    .= "<pre>" .print_r($result->errors, true). "</pre>";
+                $errorResult    .= "<pre>" . print_r($result->errors, true) . "</pre>";
             }
 
             return $errorResult;
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             $errorResult = $e->getMessage();
             TSJIPPY\printArray($errorResult);
             return $errorResult;
@@ -711,7 +729,8 @@ class Mailchimp{
      *
      * @return    object                    Object containing all campaigns
      */
-    public function getCampaigns($sendAfter) {
+    public function getCampaigns($sendAfter)
+    {
         $count            = 1000;
         $sort            = "send_time";
 
@@ -725,21 +744,22 @@ class Mailchimp{
      *
      * @param    string    $campaignId        The id of the campaign
      */
-    public function deleteCampaign($campaignId) {
-        try{
+    public function deleteCampaign($campaignId)
+    {
+        try {
             /** @disregard [OPTIONAL CODE] [OPTIONAL DESCRIPTION] */
             $response = $this->client->campaigns->remove($campaignId);
         }
         //catch exception
-        catch(\GuzzleHttp\Exception\ClientException $e) {
+        catch (\GuzzleHttp\Exception\ClientException $e) {
             $result            = json_decode($e->getResponse()->getBody()->getContents());
             $errorResult    = $result->detail;
             if (isset($result->errors)) {
-                $errorResult    .= "<pre>" .print_r($result->errors, true). "</pre>";
+                $errorResult    .= "<pre>" . print_r($result->errors, true) . "</pre>";
             }
 
             return $errorResult;
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             $errorResult = $e->getMessage();
             TSJIPPY\printArray($errorResult);
             return $errorResult;

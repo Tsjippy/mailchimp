@@ -1,16 +1,19 @@
 <?php
+
 namespace TSJIPPY\MAILCHIMP;
+
 use TSJIPPY;
 
 // Load the js file to filter all blocks
 add_action('enqueue_block_editor_assets', __NAMESPACE__ . '\blockAssets');
-function blockAssets() {
+function blockAssets()
+{
     wp_enqueue_script(
         'tsjippy-mailchimp-block',
-        TSJIPPY\pathToUrl(PLUGINPATH. 'blocks/mailchimp_options/build/index.js'),
-        [ 'wp-blocks', 'wp-dom', 'wp-dom-ready', 'wp-edit-post' ],
+        TSJIPPY\pathToUrl(PLUGINPATH . 'blocks/mailchimp_options/build/index.js'),
+        ['wp-blocks', 'wp-dom', 'wp-dom-ready', 'wp-edit-post'],
         PLUGINVERSION
-   );
+    );
 
     $mailchimp  = new Mailchimp();
     $segments   = $mailchimp->getSegments();
@@ -29,12 +32,13 @@ function blockAssets() {
         'tsjippy-mailchimp-block',
         'mailchimp',
         $segments
-   );
+    );
 }
 
 // register custom meta tag field
 add_action('init',  __NAMESPACE__ . '\blockInit');
-function blockInit() {
+function blockInit()
+{
     register_post_meta(
         '',
         'mailchimp_segment_ids',
@@ -52,19 +56,19 @@ function blockInit() {
             'default'            => [],
             'single'            => true
         ]
-   );
+    );
 
-    $result=register_post_meta('', 'mailchimp_email', array(
+    $result = register_post_meta('', 'mailchimp_email', array(
         'show_in_rest'         => true,
         'single'             => true,
         'type'                 => 'string',
         'sanitize_callback' => 'sanitize_text_field'
-   ));
+    ));
 
     register_post_meta('', 'mailchimp_extra_message', array(
         'show_in_rest'         => true,
         'single'             => true,
         'type'                 => 'string',
         'sanitize_callback' => 'sanitize_text_field'
-   ));
+    ));
 }

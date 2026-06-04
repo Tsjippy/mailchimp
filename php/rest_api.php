@@ -1,10 +1,12 @@
 <?php
+
 namespace TSJIPPY\MAILCHIMP;
+
 use TSJIPPY;
 use stdClass;
 use WP_Error;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -16,17 +18,19 @@ add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__ . '\addFormResultUrls'
  * @param array $urls The list of allowed REST API URLs.
  * @return array The updated list of allowed REST API URLs.
  */
-function addFormResultUrls($urls) {
-    $urls[] = RESTAPIPREFIX. '/forms/edit_value';
+function addFormResultUrls($urls)
+{
+    $urls[] = RESTAPIPREFIX . '/forms/edit_value';
 
     return $urls;
 }
 
 add_action('rest_api_init', __NAMESPACE__ . '\restApiInit');
-function restApiInit() {
+function restApiInit()
+{
     // Mailchimp campaign height
     register_rest_route(
-        RESTAPIPREFIX. '/mailchimp',
+        RESTAPIPREFIX . '/mailchimp',
         '/store_height',
         array(
             'methods'                 => \WP_REST_Server::CREATABLE,
@@ -42,14 +46,14 @@ function restApiInit() {
                     'validate_callback' => function ($postid) {
                         return is_numeric($postid);
                     }
-               ),
+                ),
                 'height'        => array(
                     'required'    => true,
                     'validate_callback' => function ($postid) {
                         return is_numeric($postid);
                     }
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 }
