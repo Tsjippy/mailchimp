@@ -69,9 +69,9 @@ function afterContent($frontendContend)
         <script>
             function showMailChimp(el) {
                 if (el.value == '') {
-                    el.closest('div').querySelectorAll(' .mailchimp-wrapper').foreach(el => el.classList.add('hidden'));
+                    el.closest('div').querySelectorAll(' .mailchimp-wrapper').forEach(el => el.classList.add('hidden'));
                 } else {
-                    el.closest('div').querySelectorAll(' .mailchimp-wrapper').foreach(el => el.classList.remove('hidden'));
+                    el.closest('div').querySelectorAll(' .mailchimp-wrapper').forEach(el => el.classList.remove('hidden'));
                 }
             }
         </script>
