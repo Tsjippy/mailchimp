@@ -9,7 +9,7 @@ if (! defined('ABSPATH')) {
 }
 
 // Add to mailchimp on user creation
-add_action('tsjippy_approved_user', __NAMESPACE__ . '\userApproved');
+add_action('tsjippy-approved-user', __NAMESPACE__ . '\userApproved');
 function userApproved($userId)
 {
     //Add to mailchimp
