@@ -106,7 +106,7 @@ class Mailchimp
         }
 
         //Only do if valid e-mail
-        elseif (!empty($this->user->user_email) && !str_contains($this->user->user_email, ' .empty') && wp_get_environment_type() !== 'local') {
+        elseif (!empty($this->user->user_email) && !str_contains($this->user->user_email, '.empty') && wp_get_environment_type() !== 'local') {
             TSJIPPY\printArray("Adding '{$this->user->user_email}' to Mailchimp");
 
             //First add to the audience
@@ -138,7 +138,7 @@ class Mailchimp
             $this->mailchimpStatus = [];
         }
 
-        if ($this->user->user_mail == '' || str_contains($this->user->user_mail, ' .empty')) {
+        if ($this->user->user_mail == '' || str_contains($this->user->user_mail, '.empty')) {
             return;
         }
 
