@@ -507,7 +507,7 @@ class Mailchimp
                             "subject_line"    => $title,
                             "preview_text"    => $excerpt,
                             "title"            => $title,
-                            "from_name"        => SITENAME,
+                            "from_name"        => TSJIPPY\SITENAME,
                             "reply_to"        => $email,
                             "to_name"        => "*|FNAME|*",
                             //"template_id"    => (int)$this->settings['templateid']

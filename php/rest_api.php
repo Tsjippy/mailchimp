@@ -20,7 +20,7 @@ add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__ . '\addFormResultUrls'
  */
 function addFormResultUrls($urls)
 {
-    $urls[] = RESTAPIPREFIX . '/forms/edit_value';
+    $urls[] = TSJIPPY\RESTAPIPREFIX . '/forms/edit_value';
 
     return $urls;
 }
@@ -30,7 +30,7 @@ function restApiInit()
 {
     // Mailchimp campaign height
     register_rest_route(
-        RESTAPIPREFIX . '/mailchimp',
+        TSJIPPY\RESTAPIPREFIX . '/mailchimp',
         '/store_height',
         array(
             'methods'                 => \WP_REST_Server::CREATABLE,

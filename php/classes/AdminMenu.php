@@ -155,7 +155,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                     });
 
                     foreach ($members as $member) {
-                        $memberSince    = gmdate(DATEFORMAT, strtotime($member->timestamp_opt));
+                        $memberSince    = gmdate(TSJIPPY\DATEFORMAT, strtotime($member->timestamp_opt));
                         $memberTags        = [];
                         $memberTagNames    = [];
                         foreach ($member->tags as $tag) {
@@ -236,7 +236,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
 
                     $title        = "<a href='$campaign->long_archive_url' target='_blank'>$title</a>";
 
-                    $dateSent    = gmdate(DATEFORMAT . ' ' . TIMEFORMAT, strtotime($campaign->send_time));
+                    $dateSent    = gmdate(TSJIPPY\DATEFORMAT . ' ' . TSJIPPY\TIMEFORMAT, strtotime($campaign->send_time));
 
                     $openRate    = round($campaign->report_summary->open_rate * 100, 1) . '%';
 
