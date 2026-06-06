@@ -8,6 +8,7 @@
 - comply to coding standards
 - code layout
 - _ to -
+- namespaced all constants
 
 ### Fixed
 - spacing problem
