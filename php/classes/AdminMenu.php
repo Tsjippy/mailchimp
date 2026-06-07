@@ -114,7 +114,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
             return false;
         }
 
-        $tab    = $_GET['second-tab'];
+        $tab    = TSJIPPY\sanitize($_GET['second-tab']);
 
         ob_start();
 
@@ -163,15 +163,15 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                             $memberTagNames[]    = $tag->name;
                         }
 
-                        if (!empty($_POST['member']) && $_POST['member'] == $member->id) {
+                        if (($_POST['member'] ?? '') == $member->id) {
                             // removed
-                            $removed    = array_diff($memberTagNames, $_POST['tags']);
+                            $removed    = array_diff($memberTagNames, TSJIPPY\sanitize($_POST['tags']));
                             foreach ($removed as $tagname) {
                                 $mailchimp->setTag($tagname, 'inactive');
                             }
 
                             // Added
-                            $added        = array_diff($_POST['tags'], $memberTagNames);
+                            $added        = array_diff(TSJIPPY\sanitize($_POST['tags']), $memberTagNames);
                             foreach ($added as $tagname) {
                                 $mailchimp->setTag($tagname, 'active');
                             }
@@ -280,18 +280,18 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         if (isset($_POST['delete-campaign']) && TSJIPPY\verifyNonce('nonce', 'delete-mailchimp-campaign')) {
             $mailchimp = new Mailchimp();
 
-            $response    = $mailchimp->deleteCampaign($_POST['delete-campaign']);
+            $response    = $mailchimp->deleteCampaign(TSJIPPY\sanitize($_POST['delete-campaign']));
 
             ob_start();
 
             if (empty($response)) {
         ?>
-                <div class='success'>Campaign <?php echo $_POST['delete-campaign']; ?> deleted successfully</div>
+                <div class='success'>Campaign <?php echo TSJIPPY\sanitize($_POST['delete-campaign']); ?> deleted successfully</div>
             <?php
             } else {
             ?>
                 <div class='error'>
-                    Campaign <?php echo $_POST['delete-campaign']; ?> could not be deleted<br>
+                    Campaign <?php echo TSJIPPY\sanitize($_POST['delete-campaign']); ?> could not be deleted<br>
                     <?php echo $response; ?>
                 </div>
 <?php
