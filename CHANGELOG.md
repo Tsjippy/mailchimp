@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.1.3] - 2026-06-09
+
+
+### Added
 - shared functionality loader
 
 ### Changed
@@ -16,8 +27,6 @@
 - foreach error
 - space before dot bug
 - error in mailchimp lib
-
-### Updated
 
 ## [10.1.2] - 2026-06-03
 
