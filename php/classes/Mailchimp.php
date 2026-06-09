@@ -560,10 +560,10 @@ class Mailchimp
             $this->client->campaigns->send($campainId);
 
             // Indicate as send
-            update_metadata('post', $postId, 'mailchimp_message_send', $segmentId);
+            update_metadata('post', $postId, 'tsjippy_mailchimp_message_send', $segmentId);
 
             // Store campaign id
-            add_metadata('post', $postId, 'mailchimp_campaign_id', $campainId);
+            add_metadata('post', $postId, 'tsjippy_mailchimp_campaign_id', $campainId);
 
             //TSJIPPY\printArray("Mailchimp campain send succesfully");
             return 'succes';
@@ -597,7 +597,7 @@ class Mailchimp
             return new \WP_Error('mailchimp', $error);
         }
 
-        $segments    = get_transient('mailchimp_segments');
+        $segments    = get_transient('tsjippy_mailchimp_segments');
         if (is_array($segments)) {
             return $segments;
         }
@@ -622,7 +622,7 @@ class Mailchimp
                 return strcmp(strtolower($list1->name), strtolower($list2->name));
             });
 
-            set_transient('mailchimp_segments', $response->segments, DAY_IN_SECONDS);
+            set_transient('tsjippy_mailchimp_segments', $response->segments, DAY_IN_SECONDS);
 
             return $response->segments;
         }

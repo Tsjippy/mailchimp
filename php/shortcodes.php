@@ -9,7 +9,7 @@ if (! defined('ABSPATH')) {
 }
 
 // shows a mailchimp campaign on the page
-add_shortcode("mailchimp", __NAMESPACE__ . '\mailchimpCode');
+add_shortcode("tsjippy_mailchimp", __NAMESPACE__ . '\mailchimpCode');
 /**
  * Displays a mailchimp campaign on the page. If the height of the campaign is not set, it will be displayed in an iframe. If the height is set, it will be displayed in a div.
  *
@@ -19,7 +19,7 @@ function mailchimpCode($atts)
 {
     global $post;
 
-    $height = get_post_meta($post->ID, 'mailchimp_height', true);
+    $height = get_post_meta($post->ID, 'tsjippy_mailchimp_height', true);
 
     $html    = '';
     if ($height == '') {
@@ -49,7 +49,7 @@ function mailchimpCode($atts)
         </script>";
         $html    .= "<div class='mailchimp-wrapper'>" . $dom->saveHTML($dom->getElementsByTagName('style')->item(0)) . $content . "</div>";
     } else {
-        $url = get_post_meta($post->ID, 'mailchimp_url', true);
+        $url = get_post_meta($post->ID, 'tsjippy_mailchimp_url', true);
         if ($url == '') {
             $mailchimp     = new Mailchimp();
 
@@ -57,7 +57,7 @@ function mailchimpCode($atts)
 
             $url        = $campaign->long_archive_url;
 
-            update_post_meta($post->ID, 'mailchimp_url', $url);
+            update_post_meta($post->ID, 'tsjippy_mailchimp_url', $url);
         }
 
 

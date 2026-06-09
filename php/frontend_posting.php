@@ -129,13 +129,13 @@ function afterPostSave($post)
 
     if (is_array($segmentIds) && !empty($segmentIds)) {
         $extraMessage   = str_replace("\n", '<br>', TSJIPPY\sanitize($_POST['mailchimp-extra-message']));
-        update_metadata('post', $post->ID, 'mailchimp_segment_ids', $segmentIds);
-        update_metadata('post', $post->ID, 'mailchimp_email', TSJIPPY\sanitize($_POST['mailchimp-email']));
-        update_metadata('post', $post->ID, 'mailchimp_extra_message', $extraMessage);
+        update_metadata('post', $post->ID, 'tsjippy_mailchimp_segment_ids', $segmentIds);
+        update_metadata('post', $post->ID, 'tsjippy_mailchimp_email', TSJIPPY\sanitize($_POST['mailchimp-email']));
+        update_metadata('post', $post->ID, 'tsjippy_mailchimp_extra_message', $extraMessage);
     } else {
-        delete_metadata('post', $post->ID, 'mailchimp_segment_ids');
-        delete_metadata('post', $post->ID, 'mailchimp_email');
-        delete_metadata('post', $post->ID, 'mailchimp_extra_message');
+        delete_metadata('post', $post->ID, 'tsjippy_mailchimp_segment_ids');
+        delete_metadata('post', $post->ID, 'tsjippy_mailchimp_email');
+        delete_metadata('post', $post->ID, 'tsjippy_mailchimp_extra_message');
     }
 }
 
@@ -150,9 +150,9 @@ function afterInsertPost($postId, $post)
 
 function asyncMailchimpCampaign($postId)
 {
-    $segmentIds     = get_post_meta($postId, 'mailchimp_segment_ids', true);
-    $from           = get_post_meta($postId, 'mailchimp_email', true);
-    $extraMessage   = get_post_meta($postId, 'mailchimp_extra_message', true);
+    $segmentIds     = get_post_meta($postId, 'tsjippy_mailchimp_segment_ids', true);
+    $from           = get_post_meta($postId, 'tsjippy_mailchimp_email', true);
+    $extraMessage   = get_post_meta($postId, 'tsjippy_mailchimp_extra_message', true);
 
     if (empty($segmentIds)) {
         return;
@@ -181,8 +181,8 @@ function asyncMailchimpCampaign($postId)
     // Indicate as send
     if (!empty($segmentIdsSent)) {
         //delete any post metakey
-        delete_post_meta($postId, 'mailchimp_segment_ids');
-        delete_post_meta($postId, 'mailchimp_email');
-        delete_post_meta($postId, 'mailchimp_extra_message');
+        delete_post_meta($postId, 'tsjippy_mailchimp_segment_ids');
+        delete_post_meta($postId, 'tsjippy_mailchimp_email');
+        delete_post_meta($postId, 'tsjippy_mailchimp_extra_message');
     }
 }

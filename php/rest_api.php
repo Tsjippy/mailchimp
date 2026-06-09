@@ -35,7 +35,7 @@ function restApiInit()
         array(
             'methods'                 => \WP_REST_Server::CREATABLE,
             'callback'                 => function () {
-                update_post_meta($_REQUEST['post-id'], 'mailchimp_height', $_REQUEST['height']);
+                update_post_meta((int) $_REQUEST['post-id'], 'tsjippy_mailchimp_height', (int) $_REQUEST['height']);
 
                 return true;
             },
