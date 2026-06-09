@@ -15,6 +15,7 @@
 - spacing problem
 - foreach error
 - space before dot bug
+- error in mailchimp lib
 
 ### Updated
 
