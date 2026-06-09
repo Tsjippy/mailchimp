@@ -29,40 +29,16 @@
 
 namespace MailchimpMarketing\Api;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Query;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\RequestOptions;
 use MailchimpMarketing\ApiException;
-use MailchimpMarketing\Configuration;
-use MailchimpMarketing\HeaderSelector;
 use MailchimpMarketing\ObjectSerializer;
 
-class ConversationsApi
+class ConversationsApi extends BaseApi
 {
-    protected $client;
-    protected $config;
-    protected $headerSelector;
-
-    public function __construct(Configuration $config = null)
-    {
-        $this->client = new Client([
-            'defaults' => [
-                'timeout' => 120.0
-            ]
-        ]);
-        $this->headerSelector = new HeaderSelector();
-        $this->config = $config ?: new Configuration();
-    }
-
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
     public function list($fields = null, $exclude_fields = null, $count = '10', $offset = '0', $has_unread_messages = null, $list_id = null, $campaign_id = null)
     {
         $response = $this->listWithHttpInfo($fields, $exclude_fields, $count, $offset, $has_unread_messages, $list_id, $campaign_id);

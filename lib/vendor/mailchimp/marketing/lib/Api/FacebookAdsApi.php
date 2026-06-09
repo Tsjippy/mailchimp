@@ -41,28 +41,8 @@ use MailchimpMarketing\Configuration;
 use MailchimpMarketing\HeaderSelector;
 use MailchimpMarketing\ObjectSerializer;
 
-class FacebookAdsApi
+class FacebookAdsApi extends BaseApi
 {
-    protected $client;
-    protected $config;
-    protected $headerSelector;
-
-    public function __construct(Configuration $config = null)
-    {
-        $this->client = new Client([
-            'defaults' => [
-                'timeout' => 120.0
-            ]
-        ]);
-        $this->headerSelector = new HeaderSelector();
-        $this->config = $config ?: new Configuration();
-    }
-
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
     public function list($fields = null, $exclude_fields = null, $count = '10', $offset = '0', $sort_field = null, $sort_dir = null)
     {
         $response = $this->listWithHttpInfo($fields, $exclude_fields, $count, $offset, $sort_field, $sort_dir);
