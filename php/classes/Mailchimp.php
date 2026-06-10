@@ -32,10 +32,10 @@ class Mailchimp
             $this->user            = get_userdata($userId);
 
             //Get phone number
-            $this->phonenumbers = get_user_meta($this->user->ID, "phonenumbers", true);
+            $this->phonenumbers = get_user_meta($this->user->ID, "tsjippy_phonenumbers", true);
 
             //Get mailchimp status from db
-            $this->mailchimpStatus = get_user_meta($this->user->ID, "MailchimpStatus", true);
+            $this->mailchimpStatus = get_user_meta($this->user->ID, "tsjippy_MailchimpStatus", true);
         }
 
         $api = explode('-', $this->settings['apikey']);
@@ -62,7 +62,7 @@ class Mailchimp
             $mergeFields['PHONE'] = $this->phonenumbers[1];
         }
 
-        $birthday = get_user_meta($this->user->ID, "birthday", true);
+        $birthday = get_user_meta($this->user->ID, "tsjippy_birthday", true);
         if (!empty($birthday)) {
             $birthday                = explode('-', $birthday);
             //Mailchimp wants only the month and the day
@@ -177,7 +177,7 @@ class Mailchimp
         }
 
         //Store results in db
-        update_user_meta($this->user->ID, "MailchimpStatus", $this->mailchimpStatus);
+        update_user_meta($this->user->ID, "tsjippy_MailchimpStatus", $this->mailchimpStatus);
     }
 
     /**
