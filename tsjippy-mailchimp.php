@@ -24,7 +24,10 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-
+// Load shared code
+if(file_exists(__DIR__  . '/shared-functionality/loader.php')){
+    require_once(__DIR__  . '/shared-functionality/loader.php');
+}
 
 // Define constants
 define(__NAMESPACE__ . '\PLUGIN', plugin_basename(__FILE__));
@@ -34,7 +37,10 @@ define(__NAMESPACE__ . '\PLUGINSLUG', str_replace('tsjippy-', '', basename(__FIL
 define(__NAMESPACE__ . '\SETTINGS', get_option('tsjippy_mailchimp_settings', []));
 
 // run right before activation
-register_activation_hook(__FILE__, function () {
+register_activation_hook(__FILE__, function () {// Load shared code
+    if(file_exists(__DIR__  . '/shared-functionality/loader.php')){
+        require_once(__DIR__  . '/shared-functionality/loader.php');
+    }
     \TSJIPPY\scheduleTask('add_mailchimp_campaigns_action', 'daily');
 });
 
@@ -42,8 +48,3 @@ register_activation_hook(__FILE__, function () {
 register_deactivation_hook(__FILE__, function () {
     wp_clear_scheduled_hook('add_mailchimp_campaigns_action');
 });
-
-// Load shared code
-if(file_exists(__DIR__  . '/shared-functionality/loader.php')){
-    require_once(__DIR__  . '/shared-functionality/loader.php');
-}
