@@ -41,11 +41,11 @@ function addMailchimpCampaigns()
             'meta_query'     => array(
                 'relation'         => 'AND',
                 array(
-                    'key'         => 'mailchimp_campaign_id',
+                    'key'         => 'tsjippy_mailchimp_campaign_id',
                     'compare'     => 'EXISTS'
                 ),
                 array(
-                    'key'         => 'mailchimp_campaign_id',
+                    'key'         => 'tsjippy_mailchimp_campaign_id',
                     'value'     => $campaign->id,
                     'compare'     => '='
                 ),
