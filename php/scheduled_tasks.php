@@ -38,16 +38,16 @@ function addMailchimpCampaigns()
             'numberposts'   => -1,
             'post_status'   => 'any',
             'post_type'     => 'any',
-            'meta_query'     => array(
-                'relation'         => 'AND',
+            'meta_query'    => array(
+                'relation'      => 'AND',
                 array(
-                    'key'         => 'tsjippy_mailchimp_campaign_id',
-                    'compare'     => 'EXISTS'
+                    'key'       => 'tsjippy_mailchimp_campaign_id',
+                    'compare'   => 'EXISTS'
                 ),
                 array(
-                    'key'         => 'tsjippy_mailchimp_campaign_id',
+                    'key'       => 'tsjippy_mailchimp_campaign_id',
                     'value'     => $campaign->id,
-                    'compare'     => '='
+                    'compare'   => '='
                 ),
             )
         ));
@@ -62,7 +62,7 @@ function addMailchimpCampaigns()
                     continue;
                 }
             }
-            $post['post_content']      = "[mailchimp id='$campaign->id']";
+            $post['post_content']   = "[tsjippy_mailchimp id='$campaign->id']";
 
             $postId                 = wp_insert_post($post, true, false);
 
