@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- html parsing
 
 ### Fixed
 - shared code loader
