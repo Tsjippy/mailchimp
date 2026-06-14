@@ -27,7 +27,7 @@ function mailchimpCode($atts)
 
         $dom        = new \DomDocument();
         /** @disregard P1014 */
-        $dom->loadHTML($mailchimp->client->campaigns->getContent($atts['id'])->html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $dom->loadHTML($mailchimp->client->campaigns->getContent($atts['id'])->html, LIBXML_HTML_NODEFDTD);
         $href       = $dom->getElementById('templateFooter');
         $href->parentNode->removeChild($href);
 
