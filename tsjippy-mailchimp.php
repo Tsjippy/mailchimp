@@ -41,10 +41,10 @@ register_activation_hook(__FILE__, function () {// Load shared code
     if(file_exists(__DIR__  . '/shared-functionality/loader.php')){
         require_once(__DIR__  . '/shared-functionality/loader.php');
     }
-    \TSJIPPY\scheduleTask('add_mailchimp_campaigns_action', 'daily');
+    \TSJIPPY\scheduleTask('tsjippy-add-mailchimp-campaigns', 'daily');
 });
 
 // Remove scheduled tasks upon plugin deactivation
 register_deactivation_hook(__FILE__, function () {
-    wp_clear_scheduled_hook('add_mailchimp_campaigns_action');
+    wp_clear_scheduled_hook('tsjippy-add-mailchimp-campaigns');
 });

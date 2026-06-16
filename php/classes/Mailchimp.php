@@ -538,7 +538,7 @@ class Mailchimp
 
             $template            = SETTINGS['mailchimp_html'] ?? false;
 
-            $mailContent        = apply_filters('tsjippy_before_mailchimp_send', $mailContent, $post);
+            $mailContent        = apply_filters('tsjippy-before-mailchimp-send', $mailContent, $post);
 
             // Insert the mail content in the template
             $mailContent         = str_replace('%content%', $mailContent, $template, $count);

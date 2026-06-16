@@ -10,10 +10,10 @@ if (! defined('ABSPATH')) {
 
 add_action('init', function () {
     //add action for use in scheduled task
-    add_action('add_mailchimp_campaigns_action', __NAMESPACE__ . '\addMailchimpCampaigns');
+    add_action('tsjippy-add-mailchimp-campaigns', __NAMESPACE__ . '\addMailchimpCampaigns');
 
     // needed for async signal messages
-    add_action('schedule_mailchimp_campaign', __NAMESPACE__ . '\asyncMailchimpCampaign');
+    add_action('tsjippy-schedule-mailchimp-campaign', __NAMESPACE__ . '\asyncMailchimpCampaign');
 });
 
 // add mailchimp campains to the website if they have not been created to on the website

@@ -11,7 +11,7 @@ if (! defined('ABSPATH')) {
 }
 
 // Allow rest api urls for non-logged in users
-add_filter('tsjippy_allowed_rest_api_urls', __NAMESPACE__ . '\addFormResultUrls');
+add_filter('tsjippy-allowed-rest-api-urls', __NAMESPACE__ . '\addFormResultUrls');
 /**
  * Adds the form result URLs to the list of allowed REST API URLs.
  *
