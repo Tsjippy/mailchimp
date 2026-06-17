@@ -35,16 +35,3 @@ define(__NAMESPACE__ . '\PLUGINPATH', __DIR__ . '/');
 define(__NAMESPACE__ . '\PLUGINVERSION', get_plugin_data(__FILE__, false, false)['Version']);
 define(__NAMESPACE__ . '\PLUGINSLUG', str_replace('tsjippy-', '', basename(__FILE__, '.php')));
 define(__NAMESPACE__ . '\SETTINGS', get_option('tsjippy_mailchimp_settings', []));
-
-// run right before activation
-register_activation_hook(__FILE__, function () {// Load shared code
-    if(file_exists(__DIR__  . '/shared-functionality/loader.php')){
-        require_once(__DIR__  . '/shared-functionality/loader.php');
-    }
-    \TSJIPPY\scheduleTask('tsjippy-add-mailchimp-campaigns', 'daily');
-});
-
-// Remove scheduled tasks upon plugin deactivation
-register_deactivation_hook(__FILE__, function () {
-    wp_clear_scheduled_hook('tsjippy-add-mailchimp-campaigns');
-});

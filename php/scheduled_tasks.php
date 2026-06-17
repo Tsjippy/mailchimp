@@ -9,11 +9,10 @@ if (! defined('ABSPATH')) {
 }
 
 add_action('init', function () {
-    //add action for use in scheduled task
-    add_action('tsjippy-add-mailchimp-campaigns', __NAMESPACE__ . '\addMailchimpCampaigns');
+    TSJIPPY\scheduleTask('tsjippy-mailchimp-add-campaigns', 'daily', __NAMESPACE__, 'addMailchimpCampaigns');
 
     // needed for async signal messages
-    add_action('tsjippy-schedule-mailchimp-campaign', __NAMESPACE__ . '\asyncMailchimpCampaign');
+    add_action('tsjippy-mailchimp-schedule-campaign', __NAMESPACE__ . '\asyncMailchimpCampaign');
 });
 
 // add mailchimp campains to the website if they have not been created to on the website

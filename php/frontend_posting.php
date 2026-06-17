@@ -8,7 +8,7 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-add_action('tsjippy-frontend-post-before-content', __NAMESPACE__ . '\beforeContent');
+add_action('tsjippy-frontend-content-post-before-content', __NAMESPACE__ . '\beforeContent');
 function beforeContent($object)
 {
     // check for mailchim audience id shortcode
@@ -26,7 +26,7 @@ function beforeContent($object)
 }
 
 // add the mailchimp fields to the content creation form
-add_action('tsjippy-frontend-post-after-content', __NAMESPACE__ . '\afterContent');
+add_action('tsjippy-frontend-content-post-after-content', __NAMESPACE__ . '\afterContent');
 function afterContent($frontendContend)
 {
     $mailchimpSegmentIds    = $frontendContend->getPostMeta('mailchimp_segment_ids');
@@ -113,7 +113,7 @@ function afterContent($frontendContend)
 <?php
 }
 
-add_action('tsjippy-after-post-save', __NAMESPACE__ . '\afterPostSave');
+add_action('tsjippy-frontend-content-after-post-save', __NAMESPACE__ . '\afterPostSave');
 function afterPostSave($post)
 {
     if (empty($_POST['mailchimp-segment-ids'])) {
@@ -144,7 +144,7 @@ function afterInsertPost($postId, $post)
 {
     if (in_array($post->post_status, ['publish', 'inherit'])) {
         // send asynchronous as sending a campaign is slow
-        wp_schedule_single_event(time(), 'schedule_mailchimp_campaign', [$postId]);
+        wp_schedule_single_event(time(), 'tsjippy-mailchimp-schedule-campaign', [$postId]);
     }
 }
 
