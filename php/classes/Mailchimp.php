@@ -32,7 +32,7 @@ class Mailchimp
             $this->user            = get_userdata($userId);
 
             //Get phone number
-            $this->phonenumbers = get_user_meta($this->user->ID, "tsjippy_phonenumbers", true);
+            $this->phonenumbers = get_user_meta($this->user->ID, "tsjippy_phonenumbers");
 
             //Get mailchimp status from db
             $this->mailchimpStatus = get_user_meta($this->user->ID, "tsjippy_MailchimpStatus", true);
