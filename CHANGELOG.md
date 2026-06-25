@@ -4,12 +4,17 @@
 ### Added
 
 ### Changed
-- wrapped front-end options in a collapsible
-- frontend content hook
 
 ### Fixed
 
 ### Updated
+
+## [10.2.9] - 2026-06-25
+
+
+### Changed
+- wrapped front-end options in a collapsible
+- frontend content hook
 
 ## [10.2.8] - 2026-06-24
 
