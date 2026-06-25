@@ -118,24 +118,31 @@ function afterContent($frontendContend)
 <?php
 }
 
-add_action('tsjippy-frontend-content-after-post-save', __NAMESPACE__ . '\afterPostSave');
-function afterPostSave($post)
+/**
+ * Allow comments
+ * 
+ * @param   \WP_Post    $post       The new or updated post
+ * @param   object      $object     FrontEndContent Instance
+ * @param   array       $request    The sanitized request data
+ */
+add_action('tsjippy-frontend-content-after-post-save', __NAMESPACE__ . '\afterPostSave', 10, 3);
+function afterPostSave($post, $object, $request)
 {
-    if (empty($_POST['mailchimp-segment-ids'])) {
+    if (empty($request['mailchimp-segment-ids'])) {
         return;
     }
 
     //Mailchimp
-    $segmentIds = TSJIPPY\sanitize($_POST['mailchimp-segment-ids']);
+    $segmentIds = $request['mailchimp-segment-ids'];
 
     if (!is_array($segmentIds)) {
-        $segmentIds = explode(",", TSJIPPY\sanitize($_POST['mailchimp-segment-ids']));
+        $segmentIds = explode(",", $segmentIds);
     }
 
     if (is_array($segmentIds) && !empty($segmentIds)) {
-        $extraMessage   = str_replace("\n", '<br>', TSJIPPY\sanitize($_POST['mailchimp-extra-message']));
+        $extraMessage   = str_replace("\n", '<br>', $request['mailchimp-extra-message']);
         update_metadata('post', $post->ID, 'tsjippy_mailchimp_segment_ids', $segmentIds);
-        update_metadata('post', $post->ID, 'tsjippy_mailchimp_email', TSJIPPY\sanitize($_POST['mailchimp-email']));
+        update_metadata('post', $post->ID, 'tsjippy_mailchimp_email', $request['mailchimp-email']);
         update_metadata('post', $post->ID, 'tsjippy_mailchimp_extra_message', $extraMessage);
     } else {
         delete_metadata('post', $post->ID, 'tsjippy_mailchimp_segment_ids');
