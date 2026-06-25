@@ -273,28 +273,28 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
     }
 
     /**
-     * Function to do extra actions from $_POST data. Overwrite if needed
+     * Function to do extra actions from $request data. Overwrite if needed
      */
-    public function postActions()
+    public function postActions($request)
     {
-        if (isset($_POST['delete-campaign']) && TSJIPPY\verifyNonce('nonce', 'delete-mailchimp-campaign')) {
+        if (isset($request['delete-campaign']) && TSJIPPY\verifyNonce('nonce', 'delete-mailchimp-campaign')) {
             $mailchimp = new Mailchimp();
 
-            $response    = $mailchimp->deleteCampaign(TSJIPPY\sanitize($_POST['delete-campaign']));
+            $response    = $mailchimp->deleteCampaign($request['delete-campaign']);
 
             ob_start();
 
             if (empty($response)) {
-        ?>
-                <div class='success'>Campaign <?php echo TSJIPPY\sanitize($_POST['delete-campaign']); ?> deleted successfully</div>
+            ?>
+                <div class='success'>Campaign <?php echo $request['delete-campaign']; ?> deleted successfully</div>
             <?php
             } else {
             ?>
                 <div class='error'>
-                    Campaign <?php echo TSJIPPY\sanitize($_POST['delete-campaign']); ?> could not be deleted<br>
+                    Campaign <?php echo $request['delete-campaign']; ?> could not be deleted<br>
                     <?php echo $response; ?>
                 </div>
-<?php
+            <?php
             }
 
             return ob_get_clean();
