@@ -523,6 +523,7 @@ class Mailchimp
             $campainId             = $createResult->id;
 
             // Get the rendered mail content
+            // phpcs:ignore
             $mailContent         = apply_filters('the_content', get_the_content(null, false, $postId), 'mailchimp');
 
             //Update the html

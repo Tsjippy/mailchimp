@@ -10,7 +10,7 @@ namespace TSJIPPY\MAILCHIMP;
  * AuthorURI:            harmseninnigeria.nl
  * Requires at least:    6.3
  * Requires PHP:         8.3
- * Tested up to:         6.9
+ * Tested up to:         7.0
  * Plugin URI:            https://github.com/Tsjippy/mailchimp
  * Tested:                6.9
  * TextDomain:            tsjippy
