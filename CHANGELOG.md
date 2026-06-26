@@ -4,14 +4,21 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.3.0] - 2026-06-26
+
+
+### Changed
 - pass sanitized request to tsjippy-frontend-content-after-post-save
 - sanitize post on original function
 - use wp_remote_get instead of curl
 
 ### Fixed
 - non-prefixd post meta's
-
-### Updated
 
 ## [10.2.9] - 2026-06-25
 
