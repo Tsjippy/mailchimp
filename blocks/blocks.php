@@ -4,6 +4,8 @@ namespace TSJIPPY\MAILCHIMP;
 
 use TSJIPPY;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 // Load the js file to filter all blocks
 add_action('enqueue_block_editor_assets', __NAMESPACE__ . '\blockAssets');
 function blockAssets()

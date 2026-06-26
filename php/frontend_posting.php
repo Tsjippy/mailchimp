@@ -36,7 +36,7 @@ add_action('tsjippy-frontend-content-post-after-content', __NAMESPACE__ . '\afte
 function afterContent($frontendContend)
 {
     $mailchimpSegmentIds    = $frontendContend->getPostMeta('mailchimp_segment_ids');
-    $mailchimpEmail            = $frontendContend->getPostMeta('mailchimp_email');
+    $mailchimpEmail         = $frontendContend->getPostMeta('mailchimp_email');
     $mailchimpExtraMessage  = $frontendContend->getPostMeta('mailchimp_extra_message');
     $Mailchimp              = new Mailchimp($frontendContend->user->ID);
     $segments               = $Mailchimp->getSegments();
@@ -91,7 +91,11 @@ function afterContent($frontendContend)
                     } else {
                         $selected = '';
                     }
-                    echo "<option value='{$segment->id}' $selected>{$segment->name}</option>";
+                    ?>
+                    <option value='<?php echo esc_attr($segment->id);?>' <?php if(in_array($segment->id, $mailchimpSegmentIds)) echo 'selected="selected"';?> >
+                        <?php echo esc_html($segment->name);?>
+                    </option>
+                    <?php
                 }
                 ?>
             </select>
@@ -103,7 +107,11 @@ function afterContent($frontendContend)
                     <?php
                     $emails = apply_filters('tsjippy-mailchimp-from', []);
                     foreach ($emails as $email => $text) {
-                        echo "<option value='$email'>$text</option>";
+                        ?>
+                        <option value='<?php echo esc_html($email);?>'>
+                            <?php echo esc_html($text);?>
+                        </option>
+                        <?php
                     }
                     ?>
                 </datalist>
@@ -111,7 +119,9 @@ function afterContent($frontendContend)
                 <h4>
                     Prepend message:
                 </h4>
-                <textarea name='mailchimp-extra-message'><?php echo $mailchimpExtraMessage; ?></textarea>
+                <textarea name='mailchimp-extra-message'>
+                    <?php echo esc_html($mailchimpExtraMessage); ?>
+                </textarea>
             </div>
         </div>
     </div>

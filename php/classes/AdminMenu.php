@@ -45,22 +45,20 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                     Mailchimp audience(s) you want new users added to:<br>
                     <?php
                     foreach ($lists as $key => $list) {
-                        if ($this->settings["audienceids"][$key] == $list->id) {
-                            $checked = 'checked="checked"';
-                        } else {
-                            $checked = '';
-                        }
-                        echo '<label>';
-                        echo "<input type='checkbox' name='audienceids[$key]' value='$list->id' $checked>";
-                        echo $list->name;
-                        echo '</label><br>';
+                        
+                        ?>
+                        <label>
+                            <input type='checkbox' name='audienceids[<?php esc_attr($key);?>]' value='<?php esc_attr($list->id);?>' if ($this->settings["audienceids"][$key] == $list->id) echo 'checked="checked"';>
+                            <?php echo esc_attr($list->name);?>
+                        </label><br>
+                        <?php
                     }
                     ?>
                 </label>
                 <br>
                 <label>
                     Mailchimp TAGs you want to add to new users<br>
-                    <input type="text" name="user-tags" value="<?php echo $this->settings["user-tags"]; ?>">
+                    <input type="text" name="user-tags" value="<?php echo esc_attr($this->settings["user-tags"]); ?>">
                 </label>
                 <br>
                 <br>
@@ -120,17 +118,11 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
 
         ?>
         <div class='tablink-wrapper'>
-            <button class="tablink <?php if (empty($tab) || $tab == 'audience') {
-                                        echo 'active';
-                                    } ?>" id="show-audience" data-target="audience">Audiences</button>
-            <button class="tablink <?php if ($tab == 'campaigns') {
-                                        echo 'active';
-                                    } ?>" id="show-campaigns" data-target="campaigns">Campaigns</button>
+            <button class="tablink <?php if (empty($tab) || $tab == 'audience') echo 'active'; ?>" id="show-audience" data-target="audience">Audiences</button>
+            <button class="tablink <?php if ($tab == 'campaigns') echo 'active'; ?>" id="show-campaigns" data-target="campaigns">Campaigns</button>
         </div>
 
-        <div class='tabcontent <?php if (!empty($tab) && $tab != 'audience') {
-                                    echo 'hidden';
-                                } ?>' id='audience'>
+        <div class='tabcontent <?php if (!empty($tab) && $tab != 'audience') echo 'hidden'; ?>' id='audience'>
             <table class='tsjippy table'>
                 <?php
                 foreach ($lists as $key => $list) {
@@ -155,7 +147,6 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                     });
 
                     foreach ($members as $member) {
-                        $memberSince    = gmdate(TSJIPPY\DATEFORMAT, strtotime($member->timestamp_opt));
                         $memberTags        = [];
                         $memberTagNames    = [];
                         foreach ($member->tags as $tag) {
@@ -177,30 +168,42 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                             }
                         }
 
-                        $tagSelect            = "<form action='' method='post'>";
-                        $tagSelect            .= "<input type=hidden name='email' value='$member->email_address'>";
-                        $tagSelect            .= "<input type=hidden name='member' value='$member->id'>";
-                        $tagSelect            .= "<select name='tags[]' id='$member->id' multiple onchange='this.closest(`form`).querySelector(`button`).classList.remove(`hidden`)'>";
-                        foreach ($allTags as $tag) {
-                            if (in_array($tag->id, $memberTags)) {
-                                $selected    = 'selected';
-                            } else {
-                                $selected    = '';
-                            }
-                            $tagSelect    .= "<option value='$tag->name' $selected>$tag->name</option>";
-                        }
-                        $tagSelect            .= "</select>";
-                        $tagSelect            .= "<button class='hidden'>Submit</button>";
-                        $tagSelect            .= "</form>";
-
-                        $openRate    = $member->stats->avg_open_rate * 100 . '%';
-                        echo "<tr>";
-                        echo "<td>$member->full_name</td>";
-                        echo "<td>$member->email_address</td>";
-                        echo "<td>$memberSince</td>";
-                        echo "<td>$openRate</td>";
-                        echo "<td>$tagSelect</td>";
-                        echo "</tr>";
+                        ?>
+                        <tr>
+                            <td>
+                                <?php echo esc_html($member->full_name);?>
+                            </td>
+                            <td>
+                                <?php echo esc_html($member->email_address);?>
+                            </td>
+                            <td>
+                                <?php echo esc_html(gmdate(TSJIPPY\DATEFORMAT, strtotime($member->timestamp_opt)));?>
+                            </td>
+                            <td>
+                                <?php echo esc_html($member->stats->avg_open_rate * 100);?>%
+                            </td>
+                            <td>
+                                <form action='' method='post'>";
+                                    <input type=hidden name='email' value='<?php esc_attr($member->email_address);?>'>
+                                    <input type=hidden name='member' value='<?php esc_attr($member->id);?>'>
+                                    <select name='tags[]' id='<?php esc_attr($member->id);?>' multiple onchange='this.closest(`form`).querySelector(`button`).classList.remove(`hidden`)'>
+                                        <?php
+                                        foreach ($allTags as $tag) {
+                                            ?>
+                                            <option value='<?php esc_attr($tag->name);?>' <?php if (in_array($tag->id, $memberTags)) echo  'selected';?>>
+                                                <?php esc_html($tag->name);?>
+                                            </option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <button class='hidden'>
+                                        Submit
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <?php
                     }
                 }
                 ?>
@@ -214,9 +217,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         $nonce        = wp_create_nonce('delete-mailchimp-campaign');
 
         ?>
-        <div class='tabcontent <?php if ($tab != 'campaigns') {
-                                    echo 'hidden';
-                                } ?>' id='campaigns'>
+        <div class='tabcontent <?php if ($tab != 'campaigns') echo 'hidden'; ?>' id='campaigns'>
             <table class='tsjippy table'>
                 <tr>
                     <th>Title</th>
@@ -234,27 +235,32 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                         }
                     }
 
-                    $title        = "<a href='$campaign->long_archive_url' target='_blank'>$title</a>";
+                    ?>
+                    <tr data-campaign-id='<?php esc_attr($campaign->id);?>'>
+                        <td>
+                            <a href='<?php esc_url($campaign->long_archive_url);?>' target='_blank'>
+                                <?php echo esc_html($title);?>
+                            </a>
+                        </td>
+                        <td>
+                            <?php esc_html($campaign->recipients->segment_text);?>
+                        </td>
+                        <td>
+                            <?php echo esc_html(gmdate(TSJIPPY\DATEFORMAT . ' ' . TSJIPPY\TIMEFORMAT, strtotime($campaign->send_time)));?>
+                        </td>
+                        <td>
+                            <?php echo esc_html(round($campaign->report_summary->open_rate * 100, 1) );?>%
+                        </td>
+                        <td>
+                            <form method='POST'>
+                                <input type='hidden' class='no-reset' name='delete-campaign' value='<?php echo esc_attr($campaign->id); ?>'>
+                                <input type='hidden' class='no-reset' name='nonce' value='<?php echo esc_attr($nonce); ?>'>
+                                <button type='submit'>Delete</button>
+                            </form>
+                        </td>
+                    </tr>
 
-                    $dateSent    = gmdate(TSJIPPY\DATEFORMAT . ' ' . TSJIPPY\TIMEFORMAT, strtotime($campaign->send_time));
-
-                    $openRate    = round($campaign->report_summary->open_rate * 100, 1) . '%';
-
-                    echo "<tr data-campaign-id='$campaign->id'>";
-                    echo "<td>$title</td>";
-                    echo "<td>{$campaign->recipients->segment_text}</td>";
-                    echo "<td>$dateSent</td>";
-                    echo "<td>$openRate</td>";
-                ?>
-                    <td>
-                        <form method='POST'>
-                            <input type='hidden' class='no-reset' name='delete-campaign' value='<?php echo esc_attr($campaign->id); ?>'>
-                            <input type='hidden' class='no-reset' name='nonce' value='<?php echo esc_attr($nonce); ?>'>
-                            <button type='submit'>Delete</button>
-                        </form>
-                    </td>
                 <?php
-                    echo "</tr>";
                 }
                 ?>
             </table>
@@ -286,13 +292,13 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
 
             if (empty($response)) {
             ?>
-                <div class='success'>Campaign <?php echo $request['delete-campaign']; ?> deleted successfully</div>
+                <div class='success'>Campaign <?php echo esc_attr($request['delete-campaign']); ?> deleted successfully</div>
             <?php
             } else {
             ?>
                 <div class='error'>
-                    Campaign <?php echo $request['delete-campaign']; ?> could not be deleted<br>
-                    <?php echo $response; ?>
+                    Campaign <?php echo esc_attr($request['delete-campaign']); ?> could not be deleted<br>
+                    <?php echo esc_attr($response); ?>
                 </div>
             <?php
             }
