@@ -9,6 +9,7 @@
 - use wp_remote_get instead of curl
 
 ### Fixed
+- non-prefixd post meta's
 
 ### Updated
 
