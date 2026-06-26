@@ -41,7 +41,7 @@ function blockInit()
 {
     register_post_meta(
         '',
-        'mailchimp_segment_ids',
+        "tsjippy_mailchimp_segment_ids",
         [
             'show_in_rest' => [
                 'schema' => [
@@ -58,14 +58,14 @@ function blockInit()
         ]
     );
 
-    $result = register_post_meta('', 'mailchimp_email', array(
+    $result = register_post_meta('', "tsjippy_mailchimp_email, array(
         'show_in_rest'         => true,
         'single'             => true,
         'type'                 => 'string',
         'sanitize_callback' => 'sanitize_text_field'
     ));
 
-    register_post_meta('', 'mailchimp_extra_message', array(
+    register_post_meta('', "tsjippy_mailchimp_extra_message", array(
         'show_in_rest'         => true,
         'single'             => true,
         'type'                 => 'string',

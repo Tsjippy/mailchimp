@@ -69,7 +69,7 @@ function addMailchimpCampaigns()
                 set_post_thumbnail($postId, $pictures['imageId']);
             }
 
-            add_post_meta($postId, 'mailchimp_campaign_id', $campaign->id);
+            add_post_meta($postId, "tsjippy_mailchimp_campaign_id", $campaign->id);
         }
     }
 }
