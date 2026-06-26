@@ -358,15 +358,9 @@ class Mailchimp
                         // YOUTUBE does not work, get an clickable picture instead
                         $thumbnailUrl = "https://img.youtube.com/vi/$id/hqdefault.jpg";
 
-                        $ch = curl_init();
-                        curl_setopt($ch, CURLOPT_URL, $thumbnailUrl);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                        curl_setopt($ch, CURLOPT_NOBODY, 1);
-                        curl_exec($ch);
-                        $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                        curl_close($ch);
+                        $response   = wp_remote_get($thumbnailUrl);
 
-                        if ($responseCode != 200) {
+                        if (($response['response']['code'] ?? 0) != 200) {
                             $thumbnailUrl = "https://img.youtube.com/vi/$id/mqdefault.jpg";
                         }
 
