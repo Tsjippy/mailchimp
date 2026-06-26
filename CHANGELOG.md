@@ -6,6 +6,7 @@
 ### Changed
 - pass sanitized request to tsjippy-frontend-content-after-post-save
 - sanitize post on original function
+- use wp_remote_get instead of curl
 
 ### Fixed
 
