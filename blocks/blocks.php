@@ -51,24 +51,24 @@ function blockInit()
                     ],
                 ]
             ],
-            'single'             => false,
-            'type'                 => 'array',
-            'default'            => [],
-            'single'            => true
+            'single'  => false,
+            'type'    => 'array',
+            'default' => [],
+            'single'  => true
         ]
     );
 
-    $result = register_post_meta('', "tsjippy_mailchimp_email, array(
-        'show_in_rest'         => true,
-        'single'             => true,
-        'type'                 => 'string',
+    $result = register_post_meta('', "tsjippy_mailchimp_email", array(
+        'show_in_rest'      => true,
+        'single'            => true,
+        'type'              => 'string',
         'sanitize_callback' => 'sanitize_text_field'
     ));
 
     register_post_meta('', "tsjippy_mailchimp_extra_message", array(
-        'show_in_rest'         => true,
-        'single'             => true,
-        'type'                 => 'string',
+        'show_in_rest'      => true,
+        'single'            => true,
+        'type'              => 'string',
         'sanitize_callback' => 'sanitize_text_field'
     ));
 }

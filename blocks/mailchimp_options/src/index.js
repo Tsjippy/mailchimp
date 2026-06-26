@@ -66,21 +66,21 @@ registerPlugin("mailchimp-options", {
           label={__("Mailchimp group")}
           value={mailchimpSegmentIds}
           options={[...mailchimp]}
-          onChange={(value) => updateMetaValue(value, "mailchimp_segment_ids")}
+          onChange={(value) => updateMetaValue(value, "tsjippy_mailchimp_segment_ids")}
           __nextHasNoMarginBottom
         />
         <InputControl
           isPressEnterToChange={true}
           label={__("From email address")}
           value={mailchimpEmail}
-          onChange={(value) => updateMetaValue(value, "mailchimp_email")}
+          onChange={(value) => updateMetaValue(value, "tsjippy_mailchimp_email")}
         />
         <InputControl
           isPressEnterToChange={true}
           label={__("Prepend message")}
           value={mailchimpExtraMessage}
           onChange={(value) =>
-            updateMetaValue(value, "mailchimp_extra_message")
+            updateMetaValue(value, "tsjippy_mailchimp_extra_message")
           }
         />
       </PluginDocumentSettingPanel>
