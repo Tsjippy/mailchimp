@@ -86,10 +86,6 @@ function afterContent($frontendContend)
                     // Do not send it to the same group twice
                     if ($sendSegment == $segment->id) {
                         continue;
-                    } elseif (is_array($mailchimpSegmentIds) && in_array($segment->id, $mailchimpSegmentIds)) {
-                        $selected = 'selected="selected"';
-                    } else {
-                        $selected = '';
                     }
                     ?>
                     <option value='<?php echo esc_attr($segment->id);?>' <?php if(in_array($segment->id, $mailchimpSegmentIds)) echo 'selected="selected"';?> >
@@ -164,7 +160,7 @@ function afterPostSave($post, $object, $request)
 add_action('wp_after_insert_post', __NAMESPACE__ . '\afterInsertPost', 10, 3);
 function afterInsertPost($postId, $post)
 {
-    if (in_array($post->post_status, ['publish', 'inherit'])) {
+    if (isset(['publish' => 1, 'inherit' => 1][$post->post_status])) {
         // send asynchronous as sending a campaign is slow
         wp_schedule_single_event(time(), 'tsjippy-mailchimp-schedule-campaign', [$postId]);
     }

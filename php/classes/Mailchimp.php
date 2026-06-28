@@ -327,9 +327,9 @@ class Mailchimp
 
             $provider   = false;
 
-            if (in_array($matches[1][$index], array_keys($mailchimpSupportedVideoProviders))) {
+            if (isset($mailchimpSupportedVideoProviders[$matches[1][$index]])) {
                 $provider   = $mailchimpSupportedVideoProviders[$matches[1][$index]];
-            } elseif (in_array($matches[2][$index], array_keys($mailchimpSupportedVideoProviders))) {
+            } elseif (isset($mailchimpSupportedVideoProviders[$matches[2][$index]])) {
                 $provider   = $mailchimpSupportedVideoProviders[$matches[2][$index]];
             }
 

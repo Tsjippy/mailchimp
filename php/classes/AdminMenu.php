@@ -150,7 +150,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                         $memberTags        = [];
                         $memberTagNames    = [];
                         foreach ($member->tags as $tag) {
-                            $memberTags[]        = $tag->id;
+                            $memberTags[$tag->id] = 1;
                             $memberTagNames[]    = $tag->name;
                         }
 
@@ -190,7 +190,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                                         <?php
                                         foreach ($allTags as $tag) {
                                             ?>
-                                            <option value='<?php esc_attr($tag->name);?>' <?php if (in_array($tag->id, $memberTags)) echo  'selected';?>>
+                                            <option value='<?php esc_attr($tag->name);?>' <?php if (isset($memberTags[$tag->id])) echo  'selected';?>>
                                                 <?php esc_html($tag->name);?>
                                             </option>
                                             <?php
