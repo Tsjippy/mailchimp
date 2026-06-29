@@ -48,7 +48,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                         
                         ?>
                         <label>
-                            <input type='checkbox' name='audienceids[<?php esc_attr($key);?>]' value='<?php esc_attr($list->id);?>' if ($this->settings["audienceids"][$key] == $list->id) echo 'checked="checked"';>
+                            <input type='checkbox' name='audienceids[<?php esc_attr($key);?>]' value='<?php esc_attr($list->id);?>' <?php if ($this->settings["audienceids"][$key] == $list->id) echo 'checked="checked"';?>>
                             <?php echo esc_attr($list->name);?>
                         </label><br>
                         <?php
