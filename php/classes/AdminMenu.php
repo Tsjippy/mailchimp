@@ -48,7 +48,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                         
                         ?>
                         <label>
-                            <input type='checkbox' name='audienceids[<?php esc_attr($key);?>]' value='<?php esc_attr($list->id);?>' <?php if ($this->settings["audienceids"][$key] == $list->id) echo 'checked="checked"';?>>
+                            <input type='checkbox' name='audienceids[<?php echo esc_attr($key);?>]' value='<?php echo esc_attr($list->id);?>' <?php if ($this->settings["audienceids"][$key] == $list->id) echo 'checked="checked"';?>>
                             <?php echo esc_attr($list->name);?>
                         </label><br>
                         <?php
@@ -184,14 +184,14 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                             </td>
                             <td>
                                 <form action='' method='post'>";
-                                    <input type=hidden name='email' value='<?php esc_attr($member->email_address);?>'>
-                                    <input type=hidden name='member' value='<?php esc_attr($member->id);?>'>
-                                    <select name='tags[]' id='<?php esc_attr($member->id);?>' multiple onchange='this.closest(`form`).querySelector(`button`).classList.remove(`hidden`)'>
+                                    <input type=hidden name='email' value='<?php echo esc_attr($member->email_address);?>'>
+                                    <input type=hidden name='member' value='<?php echo esc_attr($member->id);?>'>
+                                    <select name='tags[]' id='<?php echo esc_attr($member->id);?>' multiple onchange='this.closest(`form`).querySelector(`button`).classList.remove(`hidden`)'>
                                         <?php
                                         foreach ($allTags as $tag) {
                                             ?>
-                                            <option value='<?php esc_attr($tag->name);?>' <?php if (isset($memberTags[$tag->id])) echo  'selected';?>>
-                                                <?php esc_html($tag->name);?>
+                                            <option value='<?php echo esc_attr($tag->name);?>' <?php if (isset($memberTags[$tag->id])) echo  'selected';?>>
+                                                <?php echo esc_html($tag->name);?>
                                             </option>
                                             <?php
                                         }
@@ -236,14 +236,14 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                     }
 
                     ?>
-                    <tr data-campaign-id='<?php esc_attr($campaign->id);?>'>
+                    <tr data-campaign-id='<?php echo esc_attr($campaign->id);?>'>
                         <td>
-                            <a href='<?php esc_url($campaign->long_archive_url);?>' target='_blank'>
+                            <a href='<?php echo esc_url($campaign->long_archive_url);?>' target='_blank'>
                                 <?php echo esc_html($title);?>
                             </a>
                         </td>
                         <td>
-                            <?php esc_html($campaign->recipients->segment_text);?>
+                            <?php echo esc_html($campaign->recipients->segment_text);?>
                         </td>
                         <td>
                             <?php echo esc_html(gmdate(TSJIPPY\DATEFORMAT . ' ' . TSJIPPY\TIMEFORMAT, strtotime($campaign->send_time)));?>
