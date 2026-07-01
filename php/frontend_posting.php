@@ -20,14 +20,14 @@ function beforeContent($object)
     $campaign       = $mailchimp->getCampaign($matches[1]);
 
     if (!empty($campaign->long_archive_url)) {
-        ?>
+?>
         <h4>
             Mailchimp campaign url
         </h4>
-        <a href='<?php echo esc_url($campaign->long_archive_url);?>' target='_blank'>
+        <a href='<?php echo esc_url($campaign->long_archive_url); ?>' target='_blank'>
             Check the online mailchimp campaign
         </a>
-        <?php
+    <?php
     }
 }
 
@@ -87,27 +87,29 @@ function afterContent($frontendContend)
                     if ($sendSegment == $segment->id) {
                         continue;
                     }
-                    ?>
-                    <option value='<?php echo esc_attr($segment->id);?>' <?php if(in_array($segment->id, $mailchimpSegmentIds)) echo 'selected="selected"';?> >
-                        <?php echo esc_html($segment->name);?>
+                ?>
+                    <option value='<?php echo esc_attr($segment->id); ?>' <?php if (in_array($segment->id, $mailchimpSegmentIds)) echo 'selected="selected"'; ?>>
+                        <?php echo esc_html($segment->name); ?>
                     </option>
-                    <?php
+                <?php
                 }
                 ?>
             </select>
 
             <div class='mailchimp-wrapper'>
-                <h4>Use this from e-mail address</h4>
+                <h4>
+                    Use this from e-mail address
+                </h4>
                 <input type='text' name='mailchimp-email' list='emails' value='<?php echo esc_attr($mailchimpEmail); ?>'>
                 <datalist id='emails'>
                     <?php
                     $emails = apply_filters('tsjippy-mailchimp-from', []);
                     foreach ($emails as $email => $text) {
-                        ?>
-                        <option value='<?php echo esc_html($email);?>'>
-                            <?php echo esc_html($text);?>
+                    ?>
+                        <option value='<?php echo esc_html($email); ?>'>
+                            <?php echo esc_html($text); ?>
                         </option>
-                        <?php
+                    <?php
                     }
                     ?>
                 </datalist>
