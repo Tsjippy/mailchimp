@@ -17,13 +17,18 @@ if (class_exists(__NAMESPACE__ . '\Mailchimp')) {
 
 class Mailchimp
 {
-    public $userId;
-    public $settings;
-    public $user;
-    public $phonenumbers;
-    public $mailchimpStatus;
-    public $client;
+    public int $userId;
+    public array $settings;
+    public \WP_User$user;
+    public array $phonenumbers;
+    public array $mailchimpStatus;
+    public object $client;
 
+    /**
+     * Mailchimp constructor.
+     *
+     * @param    int    $userId    The user id to use for the mailchimp actions
+     */
     public function __construct($userId = '')
     {
         $this->settings        = SETTINGS;
@@ -130,7 +135,7 @@ class Mailchimp
      * Add or remove mailchimp tags
      *
      * @param    array    $tags    The tags to add to a user
-     * @param    string    $status    On of active or inactive
+     * @param    string   $status  On of active or inactive
      */
     public function changeTags($tags, $status)
     {
@@ -307,8 +312,9 @@ class Mailchimp
      * Replace urls with clickable links or video previews
      *
      * @param    string    $content    The content to look for links in
+     * @param    int       $postId     The post id to use for storing the video preview
      *
-     * @return    string                The content with clickale links and mailchimp video tags
+     * @return    string               The content with clickale links and mailchimp video tags
      */
     private function processLinks($content, $postId)
     {
@@ -435,6 +441,13 @@ class Mailchimp
         return $content;
     }
 
+    /**
+     * Remove greeting from the mail content
+     *
+     * @param    string    $postContent    The content to remove the greeting from
+     *
+     * @return    string                    The content without the greeting
+     */
     private function removeGreeting($postContent)
     {
         $lines      = preg_split('/([(\r)(\n)(,)(.)])/', $postContent, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
@@ -672,28 +685,33 @@ class Mailchimp
     /**
      * Add or remove mailchimp tags for families
      * @param    array    $tags    array of tags
-     * @param    string    $status    active or inactive
+     * @param    string   $status  active or inactive
      */
     public function updateFamilyTags($tags, $status)
     {
-        $this->changeTags($this->user->ID, $tags, $status);
+        $this->changeTags($tags, $status);
 
         //Update the meta key for all family members as well
         $family         = new TSJIPPY\FAMILY\Family();
         $familyMembers    = $family->getFamily($this->user, true);
 
+        $oldUser    = $this->user;
+
         if (count($familyMembers) > 0) {
             foreach ($familyMembers as $relative) {
+                $this->user    = get_userdata($relative);
                 //Update the tag for the relative as well
-                $this->changeTags($relative, $tags, $status);
+                $this->changeTags($tags, $status);
             }
+
+            $this->user    = $oldUser;
         }
     }
 
     /**
      * Gets a campaign by id
      *
-     * @param    int        $id        The campaign Id.
+     * @param    int       $id        The campaign Id.
      */
     public function getCampaign($id)
     {
@@ -720,7 +738,7 @@ class Mailchimp
     /**
      * Gets all Mailchimp campaigns created after a certain date
      *
-     * @param    string    $sendAfter    The string in the format '2023-10-21T15:41:36+00:00'
+     * @param    string     $sendAfter    The string in the format '2023-10-21T15:41:36+00:00'
      *
      * @return    object                    Object containing all campaigns
      */
