@@ -51,11 +51,11 @@ function mailchimpCode($atts)
     } else {
         $url = get_post_meta($post->ID, 'tsjippy_mailchimp_url', true);
         if ($url == '') {
-            $mailchimp     = new Mailchimp();
+            $mailchimp = new Mailchimp();
 
-            $campaign     = $mailchimp->getCampaign($atts['id']);
+            $campaign  = $mailchimp->getCampaign($atts['id']);
 
-            $url        = $campaign->long_archive_url;
+            $url       = $campaign->long_archive_url;
 
             update_post_meta($post->ID, 'tsjippy_mailchimp_url', $url);
         }

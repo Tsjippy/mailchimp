@@ -33,12 +33,12 @@ function beforeContent($object)
 
 // add the mailchimp fields to the content creation form
 add_action('tsjippy-frontend-content-post-after-content', __NAMESPACE__ . '\afterContent', 20);
-function afterContent($frontendContend)
+function afterContent($object)
 {
-    $mailchimpSegmentIds    = $frontendContend->getPostMeta('mailchimp_segment_ids', []);
-    $mailchimpEmail         = $frontendContend->getPostMeta('mailchimp_email', '');
-    $mailchimpExtraMessage  = $frontendContend->getPostMeta('mailchimp_extra_message', '');
-    $Mailchimp              = new Mailchimp($frontendContend->user->ID);
+    $mailchimpSegmentIds    = $object->getPostMeta('mailchimp_segment_ids', []);
+    $mailchimpEmail         = $object->getPostMeta('mailchimp_email', '');
+    $mailchimpExtraMessage  = $object->getPostMeta('mailchimp_extra_message', '');
+    $Mailchimp              = new Mailchimp($object->user->ID);
     $segments               = $Mailchimp->getSegments();
 
     if (!$segments) {
@@ -46,7 +46,7 @@ function afterContent($frontendContend)
     }
 
     // If the post is already send to a segment, show that segment
-    $sendSegment    = $frontendContend->getPostMeta('mailchimp_message_send', false);
+    $sendSegment    = $object->getPostMeta('mailchimp_message_send', false);
     if (is_numeric($sendSegment)) {
         $sendSegment    = [$sendSegment];
     }
@@ -87,7 +87,7 @@ function afterContent($frontendContend)
                 }
                 ?>
 
-                Target segement(s) to send <span class="replace-post-type"><?php echo esc_attr($frontendContend->postType); ?></span> contents to on <?php echo $frontendContend->update ? 'update' : 'publish'; ?>
+                Target segement(s) to send <span class="replace-post-type"><?php echo esc_attr($object->postType); ?></span> contents to on <?php echo $object->update ? 'update' : 'publish'; ?>
                 <select name='mailchimp-segment-ids[]' onchange="showMailChimp(this)" multiple='multiple'>
                     <option value="">
                         ---
