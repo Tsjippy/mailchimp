@@ -40,7 +40,7 @@ class Mailchimp
             $this->phonenumbers = get_user_meta($this->user->ID, "tsjippy_phonenumbers");
 
             //Get mailchimp status from db
-            $this->mailchimpStatus = get_user_meta($this->user->ID, "tsjippy_MailchimpStatus", true);
+            $this->mailchimpStatus = get_user_meta($this->user->ID, "tsjippy_MailchimpStatus");
         }
 
         $api = explode('-', $this->settings['apikey']);

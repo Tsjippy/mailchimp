@@ -61,70 +61,80 @@ function afterContent($frontendContend)
     }
 
     ?>
-    <div id="mailchimp" class="frontend-form expand-wrapper">
-        <h4>
-            Mailchimp
-            <button class="button small expand" type='button'>&#9660;</button>
-        </h4>
+    <tbody id="mailchimp" class="frontend-form expand-wrapper">
+        <tr>
+            <td>
+                <h4>
+                    Mailchimp
+                </h4>
+            </td>
+            <td>
+                <button class="button small expand" type='button'>
+                    &#9660;
+                </button>
+            </td>
+        </tr>
 
-        <div class="hidden expandable">
-            <?php
-            if (!empty($sendSegment)) {
-            ?>
-                <div class='warning' style='width: fit-content;'>
-                    An e-mail has already been send to the <?php echo esc_attr($sendSegment); ?> group.
-                </div>
-            <?php
-            }
-            ?>
-
-            Target segement(s) to send <span class="replace-post-type"><?php echo esc_attr($frontendContend->postType); ?></span> contents to on <?php echo $frontendContend->update ? 'update' : 'publish'; ?>
-            <select name='mailchimp-segment-ids[]' onchange="showMailChimp(this)" multiple='multiple'>
-                <option value="">
-                    ---
-                </option>
+        <tr>
+            <td class="hidden expandable" collspan=2>
                 <?php
-                foreach ($segments as $segment) {
-                    // Do not send it to the same group twice
-                    if ($sendSegment == $segment->id) {
-                        continue;
-                    }
+                if (!empty($sendSegment)) {
                 ?>
-                    <option value='<?php echo esc_attr($segment->id); ?>' <?php if (in_array($segment->id, $mailchimpSegmentIds)) echo 'selected="selected"'; ?>>
-                        <?php echo esc_html($segment->name); ?>
-                    </option>
+                    <div class='warning' style='width: fit-content;'>
+                        An e-mail has already been send to the <?php echo esc_attr($sendSegment); ?> group.
+                    </div>
                 <?php
                 }
                 ?>
-            </select>
 
-            <div class='mailchimp-wrapper'>
-                <h4>
-                    Use this from e-mail address
-                </h4>
-                <input type='text' name='mailchimp-email' list='emails' value='<?php echo esc_attr($mailchimpEmail); ?>'>
-                <datalist id='emails'>
+                Target segement(s) to send <span class="replace-post-type"><?php echo esc_attr($frontendContend->postType); ?></span> contents to on <?php echo $frontendContend->update ? 'update' : 'publish'; ?>
+                <select name='mailchimp-segment-ids[]' onchange="showMailChimp(this)" multiple='multiple'>
+                    <option value="">
+                        ---
+                    </option>
                     <?php
-                    $emails = apply_filters('tsjippy-mailchimp-from', []);
-                    foreach ($emails as $email => $text) {
+                    foreach ($segments as $segment) {
+                        // Do not send it to the same group twice
+                        if ($sendSegment == $segment->id) {
+                            continue;
+                        }
                     ?>
-                        <option value='<?php echo esc_html($email); ?>'>
-                            <?php echo esc_html($text); ?>
+                        <option value='<?php echo esc_attr($segment->id); ?>' <?php if (in_array($segment->id, $mailchimpSegmentIds)) echo 'selected="selected"'; ?>>
+                            <?php echo esc_html($segment->name); ?>
                         </option>
                     <?php
                     }
                     ?>
-                </datalist>
+                </select>
 
-                <h4>
-                    Prepend message:
-                </h4>
-                <textarea name='mailchimp-extra-message'>
-                    <?php echo esc_html($mailchimpExtraMessage); ?>
-                </textarea>
-            </div>
-        </div>
-    </div>
+                <div class='mailchimp-wrapper'>
+                    <h4>
+                        Use this from e-mail address
+                    </h4>
+                    <input type='text' name='mailchimp-email' list='emails' value='<?php echo esc_attr($mailchimpEmail); ?>'>
+                    <datalist id='emails'>
+                        <?php
+                        $emails = apply_filters('tsjippy-mailchimp-from', []);
+                        foreach ($emails as $email => $text) {
+                        ?>
+                            <option value='<?php echo esc_html($email); ?>'>
+                                <?php echo esc_html($text); ?>
+                            </option>
+                        <?php
+                        }
+                        ?>
+                    </datalist>
+
+                    <h4>
+                        Prepend message:
+                    </h4>
+                    <textarea name='mailchimp-extra-message'>
+                        <?php echo esc_html($mailchimpExtraMessage); ?>
+                    </textarea>
+                </div>
+            </td>
+        </tr>
+    </tbody>
 <?php
 }
 

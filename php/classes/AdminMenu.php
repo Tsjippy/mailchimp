@@ -112,7 +112,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
             return false;
         }
 
-        $tab    = TSJIPPY\sanitize($_GET['second-tab']);
+        $tab    = TSJIPPY\sanitize($_GET['second-tab'] ?? '');
 
         ob_start();
 
@@ -143,7 +143,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
 
                     $members    = $mailchimp->getListMembersInfo($list->id);
                     usort($members, function ($list1, $list2) {
-                        return strtolower($list1->full_name) > strtolower($list2->full_name);
+                        return strcmp(strtolower($list1->full_name), strtolower($list2->full_name));
                     });
 
                     foreach ($members as $member) {
