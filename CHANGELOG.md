@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.3.1] - 2026-07-02
+
+
+### Added
 - attribute escaping
 - activate shared code function
 
@@ -12,8 +23,6 @@
 ### Fixed
 - admin menu
 - missing echo call
-
-### Updated
 
 ## [10.3.0] - 2026-06-26
 
