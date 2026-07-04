@@ -5,7 +5,7 @@ import {
   __experimentalInputControl as InputControl,
 } from "@wordpress/components";
 import { useSelect } from "@wordpress/data";
-import { PluginDocumentSettingPanel } from "@wordpress/editor";
+import { PluginDocumentSettingPanel } from '@wordpress/editor';
 import { useEntityProp } from "@wordpress/core-data";
 
 const mailchimpIcon = () => {
