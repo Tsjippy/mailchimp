@@ -1,12 +1,15 @@
-const { __ } = wp.i18n;
-const { registerPlugin } = wp.plugins;
+import { registerPlugin } from "@wordpress/plugins";
+import { __ } from "@wordpress/i18n";
 import {
   SelectControl,
   __experimentalInputControl as InputControl,
 } from "@wordpress/components";
 import { useSelect } from "@wordpress/data";
-import { PluginDocumentSettingPanel } from '@wordpress/editor';
+import { PluginDocumentSettingPanel } from "@wordpress/editor";
 import { useEntityProp } from "@wordpress/core-data";
+import { useState, useEffect } from "@wordpress/element";
+import apiFetch from "@wordpress/api-fetch";
+import { addQueryArgs } from "@wordpress/url";
 
 const mailchimpIcon = () => {
   return (
@@ -17,6 +20,16 @@ const mailchimpIcon = () => {
     </svg>
   );
 };
+
+var mailchimpSegments = [];
+const postId          = wp.data.select("core/editor").getCurrentPostId();
+apiFetch({
+  path: tsjippy.restApiPrefix + `/mailchimp/get_audience_options`,
+  method: "POST",
+  data: { post_id: postId },
+}).then((res) => {
+  mailchimpSegments = res;
+});
 
 registerPlugin("mailchimp-options", {
   render: function () {
@@ -31,49 +44,41 @@ registerPlugin("mailchimp-options", {
 
     const [meta, setMeta] = useEntityProp("postType", postType, "meta");
 
-    console.log(postType);
-    console.log(meta);
-
-    const mailchimpSegmentIds = meta["mailchimp_segment_ids"];
-    const mailchimpEmail = meta["mailchimp_email"];
+    const mailchimpSegmentIds   = meta["mailchimp_segment_ids"];
+    const mailchimpEmail        = meta["mailchimp_email"];
     const mailchimpExtraMessage = meta["mailchimp_extra_message"];
 
     const updateMetaValue = (value, key) => {
-      console.log(value);
-      console.log(key);
       let newMeta = { ...meta };
 
-      if (Array.isArray(value)) {
-        //value   = JSON.stringify(value);
-        console.log(value);
-      }
-
       newMeta[key] = value;
-
-      console.log("before");
       setMeta(newMeta);
-      console.log("after");
     };
 
     return (
       <PluginDocumentSettingPanel
         name="mailchimp-options"
-        title={__("Mailchimp Options", "sim")}
+        title={__("Mailchimp Options", "tsjippy")}
         className="mailchimp-options"
       >
         <SelectControl
+          __next40pxDefaultSize={true}
           multiple
           label={__("Mailchimp group")}
           value={mailchimpSegmentIds}
-          options={[...mailchimp]}
-          onChange={(value) => updateMetaValue(value, "tsjippy_mailchimp_segment_ids")}
+          options={[...mailchimpSegments]}
+          onChange={(value) =>
+            updateMetaValue(value, "tsjippy_mailchimp_segment_ids")
+          }
           __nextHasNoMarginBottom
         />
         <InputControl
           isPressEnterToChange={true}
           label={__("From email address")}
           value={mailchimpEmail}
-          onChange={(value) => updateMetaValue(value, "tsjippy_mailchimp_email")}
+          onChange={(value) =>
+            updateMetaValue(value, "tsjippy_mailchimp_email")
+          }
         />
         <InputControl
           isPressEnterToChange={true}

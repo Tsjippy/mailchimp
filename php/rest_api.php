@@ -56,4 +56,30 @@ function restApiInit()
             )
         )
     );
+
+    // Mailchimp Segments, for use in block
+    register_rest_route(
+        TSJIPPY\RESTAPIPREFIX . '/mailchimp',
+        '/get_audience_options',
+        array(
+            'methods'                 => \WP_REST_Server::CREATABLE,
+            'callback'                 => function () {
+                $mailchimp  = new Mailchimp();
+                $segments   = $mailchimp->getSegments();
+
+                if (!is_array($segments)) {
+                    $segments   = [];
+                }
+
+                return array_map(function ($segment) {
+                    return [
+                        'value' => $segment->id,
+                        'label' => $segment->name
+                    ];
+                }, $segments);
+            },
+            'permission_callback'     => '__return_true',        // Allow non-logged in users to access this endpoint
+        )
+    );
+        
 }

@@ -153,16 +153,27 @@ function afterPostSave($post, $object, $request)
     }
 
     //Mailchimp
-    $segmentIds = $request['mailchimp-segment-ids'];
+    $segmentIds     = $request['mailchimp-segment-ids'];
 
     if (!is_array($segmentIds)) {
         $segmentIds = explode(",", $segmentIds);
     }
 
-    if (is_array($segmentIds) && !empty($segmentIds)) {
-        $extraMessage   = str_replace("\n", '<br>', $request['mailchimp-extra-message']);
-        update_metadata('post', $post->ID, 'tsjippy_mailchimp_segment_ids', $segmentIds);
+    if (!empty($segmentIds)) {
+        $currentSegmentIds   = get_post_meta($post->ID, 'tsjippy_mailchimp_segment_ids');
+        $added      = array_diff($segmentIds, $currentSegmentIds);
+        $removed    = array_diff($currentSegmentIds, $segmentIds);
+
+        foreach($added as $value){
+            add_metadata('post', $post->ID, 'tsjippy_mailchimp_segment_ids', $value);
+        }
+
+        foreach($removed as $value){
+            delete_metadata('post', $post->ID, 'tsjippy_mailchimp_segment_ids', $value);
+        }
+        
         update_metadata('post', $post->ID, 'tsjippy_mailchimp_email', $request['mailchimp-email']);
+        $extraMessage   = str_replace("\n", '<br>', $request['mailchimp-extra-message']);
         update_metadata('post', $post->ID, 'tsjippy_mailchimp_extra_message', $extraMessage);
     } else {
         delete_metadata('post', $post->ID, 'tsjippy_mailchimp_segment_ids');
@@ -182,7 +193,7 @@ function afterInsertPost($postId, $post)
 
 function asyncMailchimpCampaign($postId)
 {
-    $segmentIds     = get_post_meta($postId, 'tsjippy_mailchimp_segment_ids', true);
+    $segmentIds     = get_post_meta($postId, 'tsjippy_mailchimp_segment_ids');
     $from           = get_post_meta($postId, 'tsjippy_mailchimp_email', true);
     $extraMessage   = get_post_meta($postId, 'tsjippy_mailchimp_extra_message', true);
 

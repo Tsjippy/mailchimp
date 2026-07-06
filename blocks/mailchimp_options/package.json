@@ -15,5 +15,8 @@
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^32.3.0"
+	},
+	"dependencies": {
+		"@wordpress/api-fetch": "^7.50.0"
 	}
 }
