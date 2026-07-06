@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- block mailchimp segments retrieval
 
 ### Fixed
 
