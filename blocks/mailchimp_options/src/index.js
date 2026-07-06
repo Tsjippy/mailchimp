@@ -22,13 +22,15 @@ const mailchimpIcon = () => {
 };
 
 var mailchimpSegments = [];
-const postId          = wp.data.select("core/editor").getCurrentPostId();
-apiFetch({
-  path: tsjippy.restApiPrefix + `/mailchimp/get_audience_options`,
-  method: "POST",
-  data: { post_id: postId },
-}).then((res) => {
-  mailchimpSegments = res;
+document.addEventListener("DOMContentLoaded", () => {
+  const postId          = wp.data.select("core/editor").getCurrentPostId();
+  apiFetch({
+    path: tsjippy.restApiPrefix + `/mailchimp/get_audience_options`,
+    method: "POST",
+    data: { post_id: postId },
+  }).then((res) => {
+    mailchimpSegments = res;
+  });
 });
 
 registerPlugin("mailchimp-options", {
