@@ -4,9 +4,16 @@
 ### Added
 
 ### Changed
-- block mailchimp segments retrieval
 
 ### Fixed
+
+### Updated
+
+## [10.3.4] - 2026-07-06
+
+
+### Changed
+- block mailchimp segments retrieval
 
 ### Updated
 - blocks js
