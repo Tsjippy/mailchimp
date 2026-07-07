@@ -22,6 +22,30 @@ function blockAssets()
 add_action('init',  __NAMESPACE__ . '\blockInit');
 function blockInit()
 {
+    // shows a mailchimp campaign on the page
+    register_block_type(
+        'tsjippy-mailchimp/show-campaign',
+        array(
+            'title'           => __( 'Mailchimp Campaign', 'tsjippy' ),
+            'attributes'      => array(
+                'id'   => array(
+                    'label'   => __( 'Campaign Id', 'tsjippy' ),
+                    'type'    => 'integer',
+                    'default' => '',
+                ),
+                'url'   => array(
+                    'label'   => __( 'Campaign Url', 'tsjippy' ),
+                    'type'    => 'string',
+                    'default' => '',
+                ),
+            ),
+            'render_callback' => __NAMESPACE__.'\mailchimpCode',
+            'supports'        => array(
+                'autoRegister' => true,
+            ),
+        )
+    );
+
     register_post_meta('', "tsjippy_mailchimp_segment_ids", array(
         'show_in_rest'      => true,
         'single'            => false,
@@ -43,3 +67,61 @@ function blockInit()
         'sanitize_callback' => 'sanitize_text_field'
     ));
 }
+
+/**
+ * Displays a mailchimp campaign. If the height of the campaign is not set, it will be displayed in an iframe. If the height is set, it will be displayed in a div.
+ *
+ * @param array $atts
+ */
+function mailchimpCode($atts)
+{
+    global $post;
+
+    $height = get_post_meta($post->ID, 'tsjippy_mailchimp_height', true);
+
+    $html    = '';
+    if ($height == '') {
+        $mailchimp = new Mailchimp();
+
+        $dom        = new \DomDocument();
+        /** @disregard P1014 */
+        $dom->loadHTML($mailchimp->client->campaigns->getContent($atts['id'])->html, LIBXML_HTML_NODEFDTD);
+        $href       = $dom->getElementById('templateFooter');
+        $href->parentNode->removeChild($href);
+
+        $content    = $dom->saveHTML($dom);
+        $mergeTags    = ['MC_PREVIEW_TEXT'];
+
+        foreach ($mergeTags as $tag) {
+            $content    = str_replace("*|$tag|*", '', $content);
+        }
+
+        $html    = "<style>table,td{border: none !important;};#awesomebar{display:none;}</style>";
+        $html    .= "<script>
+            document.addEventListener('DOMContentLoaded', e => {
+                let formData = new FormData();
+                formData.append('post-id', $post->ID);
+                formData.append('height', document.querySelector('.mailchimp-wrapper').offsetHeight);
+                FormSubmit.fetchRestApi('mailchimp/store_height', formData);
+            });
+        </script>";
+        $html    .= "<div class='mailchimp-wrapper'>" . $dom->saveHTML($dom->getElementsByTagName('style')->item(0)) . $content . "</div>";
+    } else {
+        $url = get_post_meta($post->ID, 'tsjippy_mailchimp_url', true);
+        if ($url == '') {
+            $mailchimp = new Mailchimp();
+
+            $campaign  = $mailchimp->getCampaign($atts['id']);
+
+            $url       = $campaign->long_archive_url;
+
+            update_post_meta($post->ID, 'tsjippy_mailchimp_url', $url);
+        }
+
+
+        $html    .= "<iframe style='width: 100vw; height: {$height}px; border: none;' src='$url'></iframe>";
+    }
+
+    return $html;
+}
+
