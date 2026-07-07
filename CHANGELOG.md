@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- tsjippy-mailchimp/show-campaign block
 
 ### Changed
 
