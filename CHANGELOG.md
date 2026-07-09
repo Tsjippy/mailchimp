@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- show error when campaign does not exist
 
 ### Updated
 
