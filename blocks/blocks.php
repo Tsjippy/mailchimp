@@ -30,7 +30,7 @@ function blockInit()
             'attributes'      => array(
                 'id'   => array(
                     'label'   => __( 'Campaign Id', 'tsjippy' ),
-                    'type'    => 'integer',
+                    'type'    => 'string',
                     'default' => '',
                 ),
                 'url'   => array(
@@ -83,9 +83,17 @@ function mailchimpCode($atts)
     if ($height == '') {
         $mailchimp = new Mailchimp();
 
+        try{
+            $campaignHtml   = $mailchimp->client->campaigns->getContent($atts['id'])->html;
+        }catch(\Exception $e){
+            if($e->getCode() == 404){
+                return "<div class='error'>Campaign not found</div>";
+            }
+        }
+
         $dom        = new \DomDocument();
         /** @disregard P1014 */
-        $dom->loadHTML($mailchimp->client->campaigns->getContent($atts['id'])->html, LIBXML_HTML_NODEFDTD);
+        $dom->loadHTML($campaignHtml, LIBXML_HTML_NODEFDTD);
         $href       = $dom->getElementById('templateFooter');
         $href->parentNode->removeChild($href);
 
