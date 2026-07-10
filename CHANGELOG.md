@@ -3,6 +3,7 @@
 
 ### Added
 - tsjippy-mailchimp/show-campaign block
+- wp list tables in admin screen
 
 ### Changed
 
