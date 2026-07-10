@@ -2,11 +2,20 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.3.5] - 2026-07-10
+
+
+### Added
 - tsjippy-mailchimp/show-campaign block
 - wp list tables in admin screen
 - block icon
-
-### Changed
 
 ### Fixed
 - show error when campaign does not exist
