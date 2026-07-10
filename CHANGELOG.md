@@ -12,6 +12,7 @@
 - show error when campaign does not exist
 
 ### Updated
+- js
 
 ## [10.3.4] - 2026-07-06
 
