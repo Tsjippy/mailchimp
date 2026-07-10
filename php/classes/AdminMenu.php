@@ -39,7 +39,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
             $mailchimp = new Mailchimp();
             $lists = $mailchimp->getLists();
             if (!is_wp_error($lists)) {
-?>
+                ?>
                 <br>
                 <label>
                     Mailchimp audience(s) you want new users added to:<br>
@@ -104,6 +104,26 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
             return false;
         }
 
+        $screen = get_current_screen();
+ 
+        // get out of here if we are not on our settings page
+        if(!is_object($screen) || $screen->id != "tsjippy-settings_page_tsjippy-mailchimp"){
+            return;
+        }
+
+        /**
+         * Add the user defined items per page setting before we instantiate the wp list class
+         */
+        $option = 'per_page';
+        $args = array(
+            'label' => 'Campaigns',
+            'default' => 10,
+            'option' => 'campaigns_per_page'
+        );
+        add_screen_option( $option, $args );
+
+        $table     = new ExpiredCampaignsTable();
+
         $mailchimp = new Mailchimp();
 
         $lists     = $mailchimp->getLists();
@@ -115,157 +135,93 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         $tab    = TSJIPPY\sanitize($_GET['second-tab'] ?? '');
 
         ob_start();
-
         ?>
         <div class='tablink-wrapper'>
-            <button class="tablink <?php if (empty($tab) || $tab == 'audience') echo 'active'; ?>" id="show-audience" data-target="audience">Audiences</button>
-            <button class="tablink <?php if ($tab == 'campaigns') echo 'active'; ?>" id="show-campaigns" data-target="campaigns">Campaigns</button>
+            <button class="tablink <?php if (empty($tab) || $tab == 'audience') echo 'active'; ?>" id="show-audience" data-target="audience">
+                Audiences
+            </button>
+            <button class="tablink <?php if ($tab == 'campaigns') echo 'active'; ?>" id="show-campaigns" data-target="campaigns">
+                Campaigns
+            </button>
+            <?php
+            if(!empty($table->items)){
+                ?>
+                <button class="tablink <?php if ($tab == 'invalid-campaigns') echo 'active'; ?>" id="show-invalid-campaigns" data-target="invalid-campaigns">
+                    Invalid Campaigns
+                </button>
+                <?php
+            }
+            ?>
         </div>
 
         <div class='tabcontent <?php if (!empty($tab) && $tab != 'audience') echo 'hidden'; ?>' id='audience'>
-            <table class='tsjippy table'>
-                <?php
-                foreach ($lists as $key => $list) {
-                    $allTags    = $mailchimp->getSegments('static');
+            <?php
+            $mailchimp = new Mailchimp();
 
-                ?>
-                    <tr>
-                        <th colspan='5'>Audience <?php echo esc_attr($list->name); ?></th>
-                    </tr>
-                    <tr>
-                        <th>Name</th>
-                        <th>E-mail address</th>
-                        <th>Member Since</th>
-                        <th>Open Rate</th>
-                        <th>Tags</th>
-                    </tr>
-                <?php
+            $lists     = $mailchimp->getLists();
 
-                    $members    = $mailchimp->getListMembersInfo($list->id);
-                    usort($members, function ($list1, $list2) {
-                        return strcmp(strtolower($list1->full_name), strtolower($list2->full_name));
-                    });
+            if (is_wp_error($lists)) {
+                return false;
+            }
 
-                    foreach ($members as $member) {
-                        $memberTags        = [];
-                        $memberTagNames    = [];
-                        foreach ($member->tags as $tag) {
-                            $memberTags[$tag->id] = 1;
-                            $memberTagNames[]    = $tag->name;
-                        }
-
-                        if (($_POST['member'] ?? '') == $member->id) {
-                            // removed
-                            $removed    = array_diff($memberTagNames, TSJIPPY\sanitize($_POST['tags']));
-                            foreach ($removed as $tagname) {
-                                $mailchimp->setTag($tagname, 'inactive');
-                            }
-
-                            // Added
-                            $added        = array_diff(TSJIPPY\sanitize($_POST['tags']), $memberTagNames);
-                            foreach ($added as $tagname) {
-                                $mailchimp->setTag($tagname, 'active');
-                            }
-                        }
-
-                        ?>
-                        <tr>
-                            <td>
-                                <?php echo esc_html($member->full_name);?>
-                            </td>
-                            <td>
-                                <?php echo esc_html($member->email_address);?>
-                            </td>
-                            <td>
-                                <?php echo esc_html(gmdate(TSJIPPY\DATEFORMAT, strtotime($member->timestamp_opt)));?>
-                            </td>
-                            <td>
-                                <?php echo esc_html($member->stats->avg_open_rate * 100);?>%
-                            </td>
-                            <td>
-                                <form action='' method='post'>";
-                                    <input type=hidden name='email' value='<?php echo esc_attr($member->email_address);?>'>
-                                    <input type=hidden name='member' value='<?php echo esc_attr($member->id);?>'>
-                                    <select name='tags[]' id='<?php echo esc_attr($member->id);?>' multiple onchange='this.closest(`form`).querySelector(`button`).classList.remove(`hidden`)'>
-                                        <?php
-                                        foreach ($allTags as $tag) {
-                                            ?>
-                                            <option value='<?php echo esc_attr($tag->name);?>' <?php if (isset($memberTags[$tag->id])) echo  'selected';?>>
-                                                <?php echo esc_html($tag->name);?>
-                                            </option>
-                                            <?php
-                                        }
-                                        ?>
-                                    </select>
-                                    <button class='hidden'>
-                                        Submit
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        <?php
-                    }
-                }
-                ?>
-            </table>
-        </div>
-        <?php
-
-        // get all mailchimp campaigns created this year
-        $result        = $mailchimp->getCampaigns(gmdate("Y-m-d", strtotime('-1 year')) . 'T00:00:00+00:00');
-
-        $nonce        = wp_create_nonce('delete-mailchimp-campaign');
-
-        ?>
-        <div class='tabcontent <?php if ($tab != 'campaigns') echo 'hidden'; ?>' id='campaigns'>
-            <table class='tsjippy table'>
-                <tr>
-                    <th>Title</th>
-                    <th>Recipients</th>
-                    <th>Sent</th>
-                    <th>Open Rate</th>
-                    <th>Delete</th>
-                </tr>
-                <?php
-                foreach ($result->campaigns as $campaign) {
-                    $title    = $campaign->settings->title;
-                    if (empty($title)) {
-                        if (!empty($campaign->settings->subject_line)) {
-                            $title    = $campaign->settings->subject_line;
-                        }
-                    }
-
+            foreach($lists as $list){
+                $table      = new Audiences($list);
+                if(!empty($table->items)){
                     ?>
-                    <tr data-campaign-id='<?php echo esc_attr($campaign->id);?>'>
-                        <td>
-                            <a href='<?php echo esc_url($campaign->long_archive_url);?>' target='_blank'>
-                                <?php echo esc_html($title);?>
-                            </a>
-                        </td>
-                        <td>
-                            <?php echo esc_html($campaign->recipients->segment_text);?>
-                        </td>
-                        <td>
-                            <?php echo esc_html(gmdate(TSJIPPY\DATEFORMAT . ' ' . TSJIPPY\TIMEFORMAT, strtotime($campaign->send_time)));?>
-                        </td>
-                        <td>
-                            <?php echo esc_html(round($campaign->report_summary->open_rate * 100, 1) );?>%
-                        </td>
-                        <td>
-                            <form method='POST'>
-                                <input type='hidden' class='no-reset' name='delete-campaign' value='<?php echo esc_attr($campaign->id); ?>'>
-                                <input type='hidden' class='no-reset' name='nonce' value='<?php echo esc_attr($nonce); ?>'>
-                                <button type='submit'>Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-
-                <?php
+                    <div class="wrap">
+                        <h2>
+                            Mailchimp Audience for <?php echo esc_attr($list->name); ?>
+                        </h2>
+                        <form method="post">
+                            <?php
+                            // Display table
+                            $table->display();
+                            ?>
+                        </div>
+                    </form>
+                    <?php
                 }
-                ?>
-            </table>
+            }
+            ?>
         </div>
+
+        <div class='tabcontent <?php if ($tab != 'campaigns') echo 'hidden'; ?>' id='campaigns'>
+            <?php
+            $table      = new Campaigns();
+            if(!empty($table->items)){
+                ?>
+                <div class="wrap">
+                    <h2>
+                        Mailchimp Campaigns
+                    </h2>
+                    <form method="post">
+                        <?php
+                        // Display table
+                        $table->display();
+                        ?>
+                    </div>
+                </form>
+                <?php
+            }
+            ?>
+        </div>
+
         <?php
+        if(!empty($table->items)){
+            ?>
+            <div class='tabcontent <?php if ($tab != 'invalid-campaigns') echo 'hidden'; ?>' id='invalid-campaigns'>
+                <h2>
+                    Expired Mailchimp campaigns
+                </h2>
+                <form method="post">
+                    <?php
+                    // Display table
+                    $table->display();
+                    ?>
+                </form>
+            </div>
+            <?php
+        }
 
         addRawHtml(ob_get_clean(), $parent);
 

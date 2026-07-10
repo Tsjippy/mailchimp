@@ -721,10 +721,10 @@ class Mailchimp
         }
         //catch exception
         catch (\GuzzleHttp\Exception\ClientException $e) {
-            $result            = json_decode($e->getResponse()->getBody()->getContents());
+            $result         = json_decode($e->getResponse()->getBody()->getContents());
             $errorResult    = $result->detail;
             if (isset($result->errors)) {
-                $errorResult    .= "<pre>" . print_r($result->errors, true) . "</pre>";
+                $errorResult .= "<pre>" . print_r($result->errors, true) . "</pre>";
             }
 
             return $errorResult;

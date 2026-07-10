@@ -20,14 +20,14 @@ function beforeContent($object)
     $campaign       = $mailchimp->getCampaign($matches[1]);
 
     if (!empty($campaign->long_archive_url)) {
-?>
+        ?>
         <h4>
             Mailchimp campaign url
         </h4>
         <a href='<?php echo esc_url($campaign->long_archive_url); ?>' target='_blank'>
             Check the online mailchimp campaign
         </a>
-    <?php
+        <?php
     }
 }
 
