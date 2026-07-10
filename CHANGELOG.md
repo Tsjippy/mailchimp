@@ -4,6 +4,7 @@
 ### Added
 - tsjippy-mailchimp/show-campaign block
 - wp list tables in admin screen
+- block icon
 
 ### Changed
 
