@@ -74,10 +74,10 @@ class Campaigns extends \WP_List_Table
     {
         $columns = array(
             'cb'         => '<input type="checkbox" />',
-            'title'      => __('Title', 'tsjippy'),
-            'recipients' => __('Recipients', 'tsjippy'),
-            'sent'       => __('Sent', 'tsjippy'),
-            'open_rate'  => __('Open Rate', 'tsjippy')
+            'title'      => __('Title', '%TEXTDOMAIN%'),
+            'recipients' => __('Recipients', '%TEXTDOMAIN%'),
+            'sent'       => __('Sent', '%TEXTDOMAIN%'),
+            'open_rate'  => __('Open Rate', '%TEXTDOMAIN%')
         );
 
         return $columns;
@@ -166,7 +166,7 @@ class Campaigns extends \WP_List_Table
     public function column_title($item)
     {
         $actions = array(
-            'delete' => sprintf('<a href="?page=%s&action=%s&element=%s">' . __('Delete', 'tsjippy') . '</a>', $_REQUEST['page'], 'delete', $item['id']),
+            'delete' => sprintf('<a href="?page=%s&action=%s&element=%s">' . __('Delete', '%TEXTDOMAIN%') . '</a>', $_REQUEST['page'], 'delete', $item['id']),
         );
 
         return sprintf('%1$s %2$s', $item['title'], $this->row_actions($actions));

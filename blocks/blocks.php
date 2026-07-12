@@ -26,15 +26,15 @@ function blockInit()
     register_block_type(
         'tsjippy-mailchimp/show-campaign',
         array(
-            'title'           => __( 'Mailchimp Campaign', 'tsjippy' ),
+            'title'           => __( 'Mailchimp Campaign', '%TEXTDOMAIN%' ),
             'attributes'      => array(
                 'id'   => array(
-                    'label'   => __( 'Campaign Id', 'tsjippy' ),
+                    'label'   => __( 'Campaign Id', '%TEXTDOMAIN%' ),
                     'type'    => 'string',
                     'default' => '',
                 ),
                 'url'   => array(
-                    'label'   => __( 'Campaign Url', 'tsjippy' ),
+                    'label'   => __( 'Campaign Url', '%TEXTDOMAIN%' ),
                     'type'    => 'string',
                     'default' => '',
                 ),

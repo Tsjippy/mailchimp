@@ -62,9 +62,9 @@ class ExpiredCampaignsTable extends \WP_List_Table
     {
         $columns = array(
             'cb'       => '<input type="checkbox" />',
-            'campaign' => __('Campaign Id', 'tsjippy'),
-            'post_id'  => __('Post ID', 'tsjippy'),
-            'post_url' => __('Post Url', 'tsjippy')
+            'campaign' => __('Campaign Id', '%TEXTDOMAIN%'),
+            'post_id'  => __('Post ID', '%TEXTDOMAIN%'),
+            'post_url' => __('Post Url', '%TEXTDOMAIN%')
         );
 
         return $columns;
@@ -155,8 +155,8 @@ class ExpiredCampaignsTable extends \WP_List_Table
     function columnName($item)
     {
         $actions = array(
-            'edit'   => sprintf('<a href="?page=%s&action=%s&element=%s">' . __('Edit', 'tsjippy') . '</a>', $_REQUEST['page'], 'edit', $item['ID']),
-            'delete' => sprintf('<a href="?page=%s&action=%s&element=%s">' . __('Delete', 'tsjippy') . '</a>', $_REQUEST['page'], 'delete', $item['ID']),
+            'edit'   => sprintf('<a href="?page=%s&action=%s&element=%s">' . __('Edit', '%TEXTDOMAIN%') . '</a>', $_REQUEST['page'], 'edit', $item['ID']),
+            'delete' => sprintf('<a href="?page=%s&action=%s&element=%s">' . __('Delete', '%TEXTDOMAIN%') . '</a>', $_REQUEST['page'], 'delete', $item['ID']),
         );
 
         return sprintf('%1$s %2$s', $item['name'], $this->row_actions($actions));
@@ -166,8 +166,8 @@ class ExpiredCampaignsTable extends \WP_List_Table
     function get_bulk_actions()
     {
         $actions = array(
-            'delete_all' => __('Delete', 'tsjippy'),
-            'draft_all'  => __('Move to Draft', 'tsjippy')
+            'delete_all' => __('Delete', '%TEXTDOMAIN%'),
+            'draft_all'  => __('Move to Draft', '%TEXTDOMAIN%')
         );
         return $actions;
     }
