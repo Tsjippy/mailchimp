@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- uses %TEXTDOMAIN% as placeholder for translation domain
 
 ### Fixed
 
