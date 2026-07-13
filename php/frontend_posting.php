@@ -9,6 +9,11 @@ if (! defined('ABSPATH')) {
 }
 
 add_action('tsjippy-frontend-content-post-before-content', __NAMESPACE__ . '\beforeContent');
+/**
+ * Adds mailchimp url
+ * 
+ * @param object $object
+ */
 function beforeContent($object)
 {
     // check for mailchimp audience id shortcode
@@ -202,6 +207,9 @@ function afterInsertPost($postId, $post)
     }
 }
 
+/**
+ * 
+ */
 function asyncMailchimpCampaign($postId)
 {
     $segmentIds     = get_post_meta($postId, 'tsjippy_mailchimp_segment_ids');
