@@ -143,14 +143,14 @@ function afterContent($object)
 <?php
 }
 
+add_action('tsjippy-frontend-content-after-post-save', __NAMESPACE__ . '\afterPostSave', 10, 3);
 /**
- * Allow comments
+ * Runs after a post is saved or updated
  * 
  * @param   \WP_Post    $post       The new or updated post
  * @param   object      $object     FrontEndContent Instance
  * @param   array       $request    The sanitized request data
  */
-add_action('tsjippy-frontend-content-after-post-save', __NAMESPACE__ . '\afterPostSave', 10, 3);
 function afterPostSave($post, $object, $request)
 {
     if (empty($request['mailchimp-segment-ids'])) {
@@ -188,6 +188,12 @@ function afterPostSave($post, $object, $request)
 }
 
 add_action('wp_after_insert_post', __NAMESPACE__ . '\afterInsertPost', 10, 3);
+/**
+ * Set the default picture of a post after it is inserted
+ *
+ * @param    int        $postId        The WP_Post id
+ * @param    \WP_Post    $post        The WP_Post object
+ */
 function afterInsertPost($postId, $post)
 {
     if (isset(['publish' => 1, 'inherit' => 1][$post->post_status])) {
