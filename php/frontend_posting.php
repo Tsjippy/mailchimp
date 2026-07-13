@@ -33,6 +33,11 @@ function beforeContent($object)
 
 // add the mailchimp fields to the content creation form
 add_action('tsjippy-frontend-content-post-after-content', __NAMESPACE__ . '\afterContent', 20);
+/**
+ * Add the comments section to the frontend post content
+ * 
+ * @param   object    $object    The FrontEndContent instance
+ */
 function afterContent($object)
 {
     $mailchimpSegmentIds    = $object->getPostMeta('mailchimp_segment_ids', []);
