@@ -208,7 +208,9 @@ function afterInsertPost($postId, $post)
 }
 
 /**
+ * Send the campaign without waiting for the result
  * 
+ * @param   int $postId
  */
 function asyncMailchimpCampaign($postId)
 {
