@@ -5,7 +5,7 @@ namespace TSJIPPY\MAILCHIMP;
 /**
  * Plugin Name:          Tsjippy Mailchimp
  * Description:          This plugin adds the possibility to send e-mails via Mailchimp. Post contents can be send as e-mail upon publishing or updating. Any use of the *|ARCHIVE|* placeholder will be replaced with the post url. Create your api key for Mailchimp <a href='https://mailchimp.com/developer/marketing/guides/quick-start/'>here</a>.<br>
- * Version:              10.4.4
+ * Version:              10.4.5
  * Author:               Ewald Harmsen
  * AuthorURI:            harmseninnigeria.nl
  * Requires at least:    6.3
