@@ -571,7 +571,7 @@ class Mailchimp
             update_metadata('post', $postId, 'tsjippy_mailchimp_message_send', $segmentId);
 
             // Store campaign id
-            add_metadata('post', $postId, 'tsjippy_mailchimp_campaign_id', $campainId);
+            add_metadata('post', $postId, "tsjippy_mailchimp_campaign_id_$campainId", $campainId);
 
             //TSJIPPY\printArray("Mailchimp campain send succesfully");
             return 'succes';

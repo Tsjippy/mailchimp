@@ -33,23 +33,17 @@ function addMailchimpCampaigns()
 
     foreach ($result->campaigns as $campaign) {
         // make sure we do not add the same post twice
-        $posts = get_posts(array(
+        $posts = get_posts([
             'numberposts'   => -1,
             'post_status'   => 'any',
             'post_type'     => 'any',
             'meta_query'    => array(
-                'relation'      => 'AND',
                 array(
-                    'key'       => 'tsjippy_mailchimp_campaign_id',
+                    'key'       => "tsjippy_mailchimp_campaign_id_$campaign->id",
                     'compare'   => 'EXISTS'
-                ),
-                array(
-                    'key'       => 'tsjippy_mailchimp_campaign_id',
-                    'value'     => $campaign->id,
-                    'compare'   => '='
-                ),
+                )
             )
-        ));
+        ]);
 
         // do not add mailchimp campaigns created by the website
         if (empty($posts)) {
@@ -69,7 +63,7 @@ function addMailchimpCampaigns()
                 set_post_thumbnail($postId, $pictures['imageId']);
             }
 
-            add_post_meta($postId, "tsjippy_mailchimp_campaign_id", $campaign->id);
+            add_post_meta($postId, "tsjippy_mailchimp_campaign_id_$campaign->id", $campaign->id);
         }
     }
 }
