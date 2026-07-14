@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- meta query optimalization
 
 ### Fixed
 
