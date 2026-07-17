@@ -17,6 +17,14 @@
 		"@wordpress/scripts": "^32.3.0"
 	},
 	"dependencies": {
-		"@wordpress/api-fetch": "^7.50.0"
+		"@wordpress/plugins": "latest",
+		"@wordpress/i18n": "latest",
+		"@wordpress/components": "latest",
+		"@wordpress/data": "latest",
+		"@wordpress/editor": "latest",
+		"@wordpress/core-data": "latest",
+		"@wordpress/element": "latest",
+		"@wordpress/api-fetch": "latest",
+		"@wordpress/url": "latest"
 	}
 }
