@@ -14,17 +14,17 @@
 		"packages-update": "wp-scripts packages-update"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "^32.3.0"
+		"@wordpress/scripts": "^35.0.0"
 	},
 	"dependencies": {
-		"@wordpress/plugins": "latest",
-		"@wordpress/i18n": "latest",
+		"@wordpress/api-fetch": "latest",
 		"@wordpress/components": "latest",
+		"@wordpress/core-data": "latest",
 		"@wordpress/data": "latest",
 		"@wordpress/editor": "latest",
-		"@wordpress/core-data": "latest",
 		"@wordpress/element": "latest",
-		"@wordpress/api-fetch": "latest",
+		"@wordpress/i18n": "latest",
+		"@wordpress/plugins": "latest",
 		"@wordpress/url": "latest"
 	}
 }
