@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- localized js modules
 
 ### Fixed
 
