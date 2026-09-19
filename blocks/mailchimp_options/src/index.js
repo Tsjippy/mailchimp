@@ -25,7 +25,7 @@ var mailchimpSegments = [];
 document.addEventListener("DOMContentLoaded", () => {
   const postId          = wp.data.select("core/editor").getCurrentPostId();
   apiFetch({
-    path: tsjippy.restApiPrefix + `/mailchimp/get_audience_options`,
+    path: `tsjippy/v2/mailchimp/get_audience_options`,
     method: "POST",
     data: { post_id: postId },
   }).then((res) => {
