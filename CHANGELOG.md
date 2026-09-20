@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- localized js modules
 
 ### Fixed
 
 ### Updated
+
+## [10.6.3] - 2026-09-20
+
+
+### Changed
+- localized js modules
 
 ## [10.6.2] - 2026-09-16
 
