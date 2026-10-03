@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- lib update
 
 ### Fixed
 
 ### Updated
+
+## [10.7.5] - 2026-10-03
+
+
+### Changed
+- lib update
 
 ## [10.7.4] - 2026-10-03
 
